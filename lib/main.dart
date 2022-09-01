@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mood_tracker/product/consts/color.dart';
 import 'package:flutter_mood_tracker/product/home/view/homepage_view.dart';
 import 'package:flutter_mood_tracker/product/theme/theme.dart';
-
-import 'product/components/button/icon_button.dart';
 
 void main() {
   runApp(const MyApp());

@@ -6,6 +6,11 @@ class PngPaths{
   PngPaths({required this.themeInfo}){
     (themeInfo == ThemeInfo.light) ?  _basePngPath += _lightPath : _basePngPath += _darkPath;
   }
+
+  String getLightPlus(){
+    return "assets/png/light/plus.png";
+  }
+
   String get setting => "$_basePngPath/setting.png";
   String get clock => "$_basePngPath/clock.png";
   String get filter => "$_basePngPath/filter.png";

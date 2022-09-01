@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/components/button/icon_button.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
+import 'package:flutter_mood_tracker/product/consts/text.dart';
+import './widgets.dart';
 import 'package:flutter_mood_tracker/product/home/viewmodel/homepage_viewmodel.dart';
 
 class HomePageView extends StatefulWidget {
@@ -20,45 +22,26 @@ class _HomePageViewState extends State<HomePageView> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: ListView(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: PaddingSizes.mainColumnPadding.value(), top: PaddingSizes.mainColumnPadding.value()),
-              child: settingButton(),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: PaddingSizes.mainColumnPadding.value()),
-              child: const HelloBar(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 32.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: PaddingSizes.mainColumnPadding.value()),
-                    child: const Align(alignment: Alignment.centerLeft, child: Text('Today',),),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: HomePageViewConsts.todayCardSize,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 10,
-                      itemBuilder:(context, index) {
-                      return Padding(
-                        padding: index == 0 ? 
-                        EdgeInsets.only(left: PaddingSizes.mainColumnPadding.value(), right: PaddingSizes.small.value()) :
-                        EdgeInsets.only(right: PaddingSizes.small.value()) ,
-                        child: TodayMoodsListCard(model: _model),
-                      );
-                    },
-                ),
-                  )
-                ],
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: PaddingSizes.mainColumHorizontalPadding.value(), top: PaddingSizes.mainColumHorizontalPadding.value()),
+                child: settingButton(),
               ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()),
+                child: const HelloBar(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value(), bottom: PaddingSizes.mainColumnVerticalPadding.value()),
+                child: TodayBar(model: _model),
+              ),
+              const SubTitle(text: ProjectText.homepageSubtitleInfogram),
+              const Infogram(),
+              RecordedTopBar(model: _model),
+              RecordedList(model: _model)
+            ],
+          ),
         ),
-      ),
     );
   }
 
@@ -72,57 +55,57 @@ class _HomePageViewState extends State<HomePageView> {
   }
 }
 
-class TodayMoodsListCard extends StatelessWidget {
-  const TodayMoodsListCard({
-    Key? key,
-    required HomePageViewModel model,
-  }) : _model = model, super(key: key);
-
-  final HomePageViewModel _model;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: HomePageViewConsts.todayCardSize,
-      height: HomePageViewConsts.todayCardSize,
-      child: Card(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-          SizedBox(
-            width: HomePageViewConsts.todayCardIconSize, 
-            height: HomePageViewConsts.todayCardIconSize, 
-            child: Image.asset(_model.pngPaths.happy
-            )
-          ),
-          const Text('12:22')
-        ],),
-      ),
-    );
-  }
-}
-
-class HomePageViewConsts {
-  static double todayCardIconSize = 32.0;
-  static double todayCardSize = 100;
-
-}
-
-class HelloBar extends StatelessWidget {
-  const HelloBar({
+class Infogram extends StatelessWidget {
+  const Infogram({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('HELLO!', 
-        style: Theme.of(context).textTheme.subtitle1?.copyWith(fontSize: FontSizes.header.value(), fontWeight: FontWeights.header.value())),
-        Text('Today: August 17' , style: Theme.of(context).textTheme.subtitle1),
-      ],
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: HomePageViewConsts.infogramContainerSize,
+      child: ListView.builder(
+        itemCount: 10,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: index == 0 ? EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()) : EdgeInsets.only(left: PaddingSizes.small.value()),
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(PaddingSizes.medium.value()),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Peoples likes you',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6
+                            ?.copyWith(
+                                fontWeight: FontWeights.header.value()),
+                      ),
+                      Column(
+                        children: const [
+                          Text('Arthur'),
+                          Text('Josh'),
+                          Text('Dutch'),
+                        ],
+                      )
+                    ]),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
+}
+
+//Constants
+class HomePageViewConsts {
+  static double todayCardIconSize = 32.0;
+  static double todayCardSize = 100;
+  static double infogramContainerSize = 124;
+  static double recordedCardHeight = 100;
 }
