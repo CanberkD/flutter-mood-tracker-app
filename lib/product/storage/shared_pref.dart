@@ -49,6 +49,12 @@ class SharedPref{
   List<InfogramModel> setInfogramModelList(){
     List<String> happyPeopleList = [];
     List<String> sadPeopleList = [];
+    List<String> infogramModelItemsHappy = [];
+    List<String> infogramModelItemsSad = [];
+
+    var mapOfSad = {};
+    var mapOfHappy = {};
+
 
     for(var item in recordedMoodModelList){
       for(var item2 in item.moodList) {
@@ -61,32 +67,45 @@ class SharedPref{
       }
     }
 
-    var mapOfHappy = {};
-
     for (var element in happyPeopleList) {
-    if(!mapOfHappy.containsKey(element)) {
-      mapOfHappy[element] = 1;
-    } else {
-      mapOfHappy[element] += 1;
+      if(!mapOfHappy.containsKey(element)) {
+        mapOfHappy[element] = 1;
+      } else {
+        mapOfHappy[element] += 1;
+      }
     }
-    }
-    print('${mapOfHappy}happy');
-    var mapOfSad = {};
 
     for (var element in sadPeopleList) {
-    if(!mapOfSad.containsKey(element)) {
-      mapOfSad[element] = 1;
-    } else {
-      mapOfSad[element] += 1;
+      if(!mapOfSad.containsKey(element)) {
+        mapOfSad[element] = 1;
+      } else {
+        mapOfSad[element] += 1;
+      }
     }
-    }
-    print('${mapOfSad}sad');
 
-    //Liste çektiğinde boş olma ihtimalini handle et. Size'ına göre ilk 3 - 2 - 1 or empty göster.
-    // Sonra placeler için de InfogramModel ekle.
-    return [
-      InfogramModel(title: 'Peoples make you happy', items: [mapOfHappy.keys.elementAt(0), mapOfHappy.keys.elementAt(1)]),
-      InfogramModel(title: 'Peoples make you sad', items: [mapOfSad.keys.elementAt(0), mapOfSad.keys.elementAt(1)]),
+    for(int i = 0; i < 3 ; i++){
+      if(mapOfHappy.length >= (i + 1)) {
+        infogramModelItemsHappy.add(mapOfHappy.keys.elementAt(i));
+      }
+      if(mapOfSad.length >= i + 1){
+        infogramModelItemsSad.add(mapOfSad.keys.elementAt(i));
+      }
+    }
+
+    if(infogramModelItemsSad.isNotEmpty && infogramModelItemsHappy.isNotEmpty){
+      return [
+        InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy),
+        InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad),
       ];
+    }
+    else if (infogramModelItemsSad.isNotEmpty) {
+      return [InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad)];
+    }
+    else if (infogramModelItemsHappy.isEmpty) {
+      return [InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy)];
+    }
+    else {
+      return [];
+    }
   }
 }

@@ -36,9 +36,9 @@ class _HomePageViewState extends State<HomePageView> {
                 child: TodayBar(model: _model),
               ),
               const SubTitle(text: ProjectText.homepageSubtitleInfogram),
-              Infogram(model: _model,),
+              _model.infogramList.isNotEmpty ? Infogram(model: _model,) : const InformationText(text: "You have not info about your mood's because you never select peoples with you."),
               RecordedTopBar(model: _model),
-              RecordedList(model: _model)
+              _model.recordedList.isNotEmpty ? RecordedList(model: _model) : const InformationText(text: 'You have never input your mood.'),
             ],
           ),
         ),
@@ -52,6 +52,23 @@ class _HomePageViewState extends State<HomePageView> {
                 padding: EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()),
                 child: Image.asset(_model.pngPaths.setting),
               )));
+  }
+}
+
+class InformationText extends StatelessWidget {
+  const InformationText({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: PaddingSizes.mainColumHorizontalPadding.value()) + EdgeInsets.only(top: PaddingSizes.small.value()),
+      child: Text(text),
+    );
   }
 }
 
