@@ -6,7 +6,7 @@ extension ButtonSizeExtension on ButtonSize{
   double value(){
     switch(this){
       case ButtonSize.iconbuttonsize:
-        return 40.0;
+        return 30.0;
       
     }
   }
@@ -20,7 +20,7 @@ extension PaddingSizeExtension on PaddingSizes {
       case PaddingSizes.mainColumHorizontalPadding:
         return 24.0;
       case PaddingSizes.iconButtonChildPadding:
-        return 52.0;
+        return 64.0;
       case PaddingSizes.small:
         return 8.0;
       case PaddingSizes.medium:

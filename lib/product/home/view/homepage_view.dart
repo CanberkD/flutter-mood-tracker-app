@@ -29,14 +29,14 @@ class _HomePageViewState extends State<HomePageView> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()),
-                child: const HelloBar(),
+                child: HelloBar(model: _model),
               ),
               Padding(
                 padding: EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value(), bottom: PaddingSizes.mainColumnVerticalPadding.value()),
                 child: TodayBar(model: _model),
               ),
               const SubTitle(text: ProjectText.homepageSubtitleInfogram),
-              const Infogram(),
+              Infogram(model: _model,),
               RecordedTopBar(model: _model),
               RecordedList(model: _model)
             ],
@@ -55,57 +55,11 @@ class _HomePageViewState extends State<HomePageView> {
   }
 }
 
-class Infogram extends StatelessWidget {
-  const Infogram({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: HomePageViewConsts.infogramContainerSize,
-      child: ListView.builder(
-        itemCount: 10,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: index == 0 ? EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()) : EdgeInsets.only(left: PaddingSizes.small.value()),
-            child: Card(
-              child: Padding(
-                padding: EdgeInsets.all(PaddingSizes.medium.value()),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Peoples likes you',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline6
-                            ?.copyWith(
-                                fontWeight: FontWeights.header.value()),
-                      ),
-                      Column(
-                        children: const [
-                          Text('Arthur'),
-                          Text('Josh'),
-                          Text('Dutch'),
-                        ],
-                      )
-                    ]),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
 //Constants
 class HomePageViewConsts {
   static double todayCardIconSize = 32.0;
   static double todayCardSize = 100;
-  static double infogramContainerSize = 124;
+  static double infogramContainerSize = 130;
   static double recordedCardHeight = 100;
+  static double infogramCardWidth = 300;
 }
