@@ -115,6 +115,121 @@ class _ToggleButtonState extends State<ToggleButton> {
   }
 }
 
+class ToggleGroup extends StatefulWidget {
+
+  const ToggleGroup({
+    Key? key,
+
+    //When ToggleButton selected => child of button at index = widget in selectedChildList[index]. 
+    required this.selectedChildList,
+
+    //Taking this list and set button's isSelected in initState. Has to be only one true.
+    //When a toggle button clicked => isSelectedBoolList[index of clicked button] equals true and rest of it equals false.   
+    required this.isSelectedBoolList,
+
+    //When toggle button clicked, this function throw back isSelectedBoolList.
+    required this.onPressed,
+
+    //When toggle button not selected => child of button at index = widget in notSelectedChildList[index].
+    required this.notSelectedChildList,
+
+    //When a button selected => background color of selected button = selectedColor.
+    required this.selectedColor,
+
+    //When a button selected => Rest of button's background color = notSelectedColor.
+    required this.notSelectedColor,
+
+    //Buttons size attributes.
+    required this.buttonWidth,
+    required this.buttonHeight,
+
+    }) : super(key: key);
+
+  final Function(List<bool> boolList) onPressed;
+  final List<Widget> selectedChildList;
+  final List<Widget> notSelectedChildList;
+  final Color selectedColor;
+  final Color notSelectedColor;
+  final List<bool> isSelectedBoolList;
+  final double buttonWidth;
+  final double buttonHeight;
+
+  @override
+  State<ToggleGroup> createState() => _ToggleGroupState();
+}
+
+class _ToggleGroupState extends State<ToggleGroup> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    //Checking isSelectedBoolList has only one true;
+    if(!isTrueOnlyOne(widget.isSelectedBoolList)){
+      throw Exception('ToggleGroup construction error: isSelectedBoolList has to be only one true item.');
+    }
+
+    //Checking selectedChild and not selectedChild count equals.
+    if(widget.selectedChildList.length != widget.notSelectedChildList.length){
+      throw Exception('ToggleGroup construction error: selectedChildList.lenght has to be equals notSelectedChildList.lenght');
+    }
+
+    //Checking selectedChild||notSelectedChild and isSelectedBoolList count equals. 
+    if(widget.selectedChildList.length != widget.isSelectedBoolList.length || widget.notSelectedChildList.length != widget.isSelectedBoolList.length){
+      throw Exception('ToggleGroup construction error: isSelectedBoolList.lenght has to be equals selected/notSelectedChildList.lenght.');
+    }
+  }
+
+  bool isTrueOnlyOne(List<bool> list){
+    int counter = 0;
+    for(var item in list){
+      if(item == true){
+        counter++;
+        if(counter >= 2){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: widget.buttonHeight + widget.buttonHeight*0.1,
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {  
+          return ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemCount: widget.selectedChildList.length,
+          itemBuilder: (context, index) {
+            return ToggleButton(
+              width: widget.buttonWidth,
+              heigth: widget.buttonHeight,
+              onpressed: (isSelected) {
+                setState(() {
+                  widget.isSelectedBoolList.fillRange(0, widget.isSelectedBoolList.length, false);
+                  widget.isSelectedBoolList[index] = true;
+                  widget.onPressed.call(widget.isSelectedBoolList);
+                });
+              }, 
+              notSelectedChild: widget.notSelectedChildList[index],
+              notSelectedColor: widget.notSelectedColor,
+              selectedChild: widget.selectedChildList[index],
+              selectedColor: widget.selectedColor, 
+              isSelected: widget.isSelectedBoolList[index],
+            );
+          }, separatorBuilder: (BuildContext context, int index) { 
+            //For MainAxisAlignment.spaceevenly effect, calculating space between buttons.
+            return index != widget.selectedChildList.length - 1 ? SizedBox(width: (constraints.maxWidth - (widget.buttonWidth*widget.selectedChildList.length)) / (widget.selectedChildList.length - 1)): const SizedBox.shrink();
+            },
+              );
+  }),
+    );
+  }
+}
+
 class ToggleButtonConsts {
   final Duration animationDuration = const Duration(milliseconds: 100);
   final double smallerPercent = 0.05;
