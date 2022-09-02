@@ -21,16 +21,7 @@ class PngPaths{
   String get sad => "$_basePngPath/sad.png";
   String get theme => "$_basePngPath/theme.png";
   String get world => "$_basePngPath/world.png";
+  String get close => "$_basePngPath/close.png";
 }
 
 enum ThemeInfo {light, dark}
-
-
-
-
-
-
-
-
-
-//assets\png\light\setting.png

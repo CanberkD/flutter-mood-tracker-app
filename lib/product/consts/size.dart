@@ -12,7 +12,7 @@ extension ButtonSizeExtension on ButtonSize{
   }
 }
 
-enum PaddingSizes {small, medium, large, mainColumnVerticalPadding, mainColumHorizontalPadding, iconButtonChildPadding}
+enum PaddingSizes {small, medium, large, mainColumnVerticalPadding, mainColumHorizontalPadding, iconButtonChildPadding, toggleButtonChildPadding}
 
 extension PaddingSizeExtension on PaddingSizes {
   double value(){
@@ -28,7 +28,9 @@ extension PaddingSizeExtension on PaddingSizes {
       case PaddingSizes.large:
         return 32.0;
       case PaddingSizes.mainColumnVerticalPadding:
-        return 48.0;
+        return 28.0;
+      case PaddingSizes.toggleButtonChildPadding:
+        return 256.0;
     }
   }
 }
@@ -41,7 +43,7 @@ extension FontSizesExtension on FontSizes{
       case FontSizes.header:
         return 52.0;
       case FontSizes.subHeader:
-        return 22.0;
+        return 26.0;
     }
   }
 }

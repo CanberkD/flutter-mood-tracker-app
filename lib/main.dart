@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mood_tracker/product/home/view/homepage_view.dart';
+import 'package:flutter_mood_tracker/product/input/view/input_view.dart';
 import 'package:flutter_mood_tracker/product/theme/theme.dart';
 
 void main() {
@@ -30,6 +30,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const HomePageView();
+    return const InputView();
   }
 }

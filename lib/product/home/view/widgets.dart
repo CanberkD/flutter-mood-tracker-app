@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mood_tracker/product/components/text/header_text.dart';
+import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
 import 'package:flutter_mood_tracker/product/consts/text.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 
 import '../../components/button/icon_button.dart';
-import '../../consts/color.dart';
 import '../../consts/size.dart';
 import '../viewmodel/homepage_viewmodel.dart';
 import 'homepage_view.dart';
@@ -23,8 +24,7 @@ class HelloBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(ProjectText.homepageTitleHello, 
-        style: Theme.of(context).textTheme.subtitle1?.copyWith(fontSize: FontSizes.header.value(), fontWeight: FontWeights.header.value())),
+        const HeaderTextWidget(text: ProjectText.homepageTitleHello),
         Text(model.helloBarDateStr , style: Theme.of(context).textTheme.subtitle1),
       ],
     );
@@ -262,25 +262,6 @@ class RecordedTopBar extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class SubTitle extends StatelessWidget {
-  final String text;
-
-  const SubTitle({
-    Key? key, required this.text,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()),
-      child: Align(
-        alignment: Alignment.centerLeft, 
-        child: Text(text, 
-        style: Theme.of(context).textTheme.subtitle1?.copyWith(color: ProjectColors.primaryBlack.value(), fontSize: FontSizes.subHeader.value()),)),
     );
   }
 }

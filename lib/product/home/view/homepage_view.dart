@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/components/button/icon_button.dart';
+import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
 import 'package:flutter_mood_tracker/product/consts/text.dart';
 import './widgets.dart';
@@ -36,9 +37,9 @@ class _HomePageViewState extends State<HomePageView> {
                 child: TodayBar(model: _model),
               ),
               const SubTitle(text: ProjectText.homepageSubtitleInfogram),
-              _model.infogramList.isNotEmpty ? Infogram(model: _model,) : const InformationText(text: "You have not info about your mood's because you never select peoples with you."),
+              _model.infogramList.isNotEmpty ? Infogram(model: _model,) : const InformationText(text: ProjectText.informationEmptyInfogram),
               RecordedTopBar(model: _model),
-              _model.recordedList.isNotEmpty ? RecordedList(model: _model) : const InformationText(text: 'You have never input your mood.'),
+              _model.recordedList.isNotEmpty ? RecordedList(model: _model) : const InformationText(text: ProjectText.informationEmptyRecorded),
             ],
           ),
         ),

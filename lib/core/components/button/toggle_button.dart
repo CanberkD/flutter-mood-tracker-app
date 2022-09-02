@@ -10,6 +10,7 @@ class ToggleButton extends StatefulWidget {
     required Color selectedColor,
     required Widget notSelectedChild,
     required Widget selectedChild,
+    required bool isSelected,
     Color? borderColor,
     double? width,
     double? heigth,
@@ -19,6 +20,7 @@ class ToggleButton extends StatefulWidget {
       _selectedColor = selectedColor,
       _child = notSelectedChild,
       _selectedChild = selectedChild,
+      _isSelected = isSelected,
       _width = width ?? 100,
       _height = heigth ?? 100,
       _borderRadius = borderRadius ?? 10.0,
@@ -30,10 +32,12 @@ class ToggleButton extends StatefulWidget {
   final Widget _selectedChild;
   final double _width;
   final double _height;
+  final bool _isSelected;
   final Color _selectedColor;
   final Color _notSelectedColor;
   final double _borderRadius;
   final Color _borderColor;
+
 
 
   @override
@@ -42,19 +46,27 @@ class ToggleButton extends StatefulWidget {
 
 class _ToggleButtonState extends State<ToggleButton> {
   
-  bool _isSelected = false;
-  bool _isTapDown = false;
-
-  void _onPressed(){
-    widget.onpressed.call(_isSelected);
-    setState(() {
-      _isSelected = !_isSelected;    
-    });
+  late bool _isSelected;
+  final bool _isTapDown = false;
+  @override
+  void initState() {
+    super.initState();
+    _isSelected = widget._isSelected;
   }
 
-  void _isTapDownChange(){
+  @override
+  void didUpdateWidget(covariant ToggleButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _isSelected = widget._isSelected;
+  }
+  void _onPressed(){
+    widget.onpressed.call(_isSelected);
+    _isSelectedChange();   
+  }
+
+  void _isSelectedChange(){
       setState(() {
-        _isTapDown = !_isTapDown;
+        _isSelected = !_isSelected;
       });
   }
 
@@ -73,12 +85,12 @@ class _ToggleButtonState extends State<ToggleButton> {
   AnimatedContainer button(){
     return AnimatedContainer(
           duration: ToggleButtonConsts().animationDuration,
-          width: _isTapDown ? widget._width - (widget._width) * ToggleButtonConsts().smallerPercent : widget._width, 
-          height: _isTapDown ? widget._height - (widget._height) * ToggleButtonConsts().smallerPercent  : widget._height,
+          width: (_isSelected) ? widget._width - (widget._width) * ToggleButtonConsts().smallerPercent : widget._width, 
+          height: (_isSelected) ? widget._height - (widget._height) * ToggleButtonConsts().smallerPercent  : widget._height,
           child: GestureDetector(
-            onTap: _onPressed,
-            onTapDown: (details) {_isTapDownChange();},
-            onTapCancel: _isTapDownChange,
+            onTap: () {},
+            onTapDown: (details) {_onPressed();},
+            onTapCancel: _isSelectedChange,
             child: AnimatedContainer(
               duration: ToggleButtonConsts().animationDuration,
               decoration: BoxDecoration(
@@ -88,11 +100,11 @@ class _ToggleButtonState extends State<ToggleButton> {
               color: _isSelected ? widget._selectedColor : widget._notSelectedColor, 
               borderRadius: BorderRadiusDirectional.all(Radius.circular(widget._borderRadius)),
               boxShadow: [
-                _isTapDown ?  const BoxShadow() : simpleBoxShadow,
+                _isSelected ?  const BoxShadow() : simpleBoxShadow,
               ],
             ),
-            //For sizing child., wrap with padding your child widget. 
-            child: SizedBox(width: double.infinity, height: double.infinity, 
+            child: Padding(
+              padding: EdgeInsets.all(widget._width * 0.3),
               child: FittedBox(fit: BoxFit.fitHeight,
                 child: _isSelected ? widget._selectedChild : widget._child
               ),
