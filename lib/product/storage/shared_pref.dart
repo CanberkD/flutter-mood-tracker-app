@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
@@ -108,4 +109,31 @@ class SharedPref{
       return [];
     }
   }
+
+  List<String> activitys = ['Lecture', 'Work',];
+
+  List<Widget> getActivityWidgetList(Color textColor){
+    List<Widget> list = [];
+    for(var item in activitys){
+      list.add(Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0,),
+        child: Text(item, style: TextStyle(color: textColor)),
+      ));
+    }
+    return list;
+  }
+
+  List<Widget> activityTextWidgetList (Color childTextColor){
+    List<Widget> list = [];
+    for(var item in activitys){
+      list.add(Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Text(item, style: TextStyle(color: childTextColor),),
+      ));
+    }    
+    return list;
+  } 
+
+  List<String> peopleList = ['John', 'Arthur', 'Dutch', 'Bill', 'Chavier'];
+
 }

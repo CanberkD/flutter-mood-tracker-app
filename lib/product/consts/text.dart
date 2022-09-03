@@ -4,7 +4,6 @@ class ProjectText {
   static const String homepageSubtitleToday = "Today";
   static const String homepageSubtitleInfogram = "Infogram";
   static const String homepageSubtitleRecorded = "Recorded";
-  static const String inputpageTitleChoose = "Choose your mood.";
 
   static const String january  = "January";
   static const String february  = "February";
@@ -30,4 +29,9 @@ class ProjectText {
   static const String informationEmptyInfogram =  "You have not info about your mood's because you never select peoples with you.";
   static const String informationEmptyRecorded = 'You have never input your mood.';
 
+  static const String inputpageTitleChoose = "Choose your mood.";
+  static const String inputpageMoodSelectionTitle = "How do you feel?";
+  static const String inputpageActivitySelectionTitle = "What you doing right now?";
+  static const String inputpagePeopleSelectionTitle = "People you are with?";
+  static const String inputpageSaveButtonText = "Save";
 }

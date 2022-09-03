@@ -60,10 +60,12 @@ class _ToggleButtonState extends State<ToggleButton> {
     _isSelected = widget._isSelected;
   }
   void _onPressed(){
-    widget.onpressed.call(_isSelected);
-    _isSelectedChange();   
+    widget.onpressed.call(_isSelected); 
   }
 
+  void _onTap(){
+    _isSelectedChange();   
+  }
   void _isSelectedChange(){
       setState(() {
         _isSelected = !_isSelected;
@@ -88,8 +90,10 @@ class _ToggleButtonState extends State<ToggleButton> {
           width: (_isSelected) ? widget._width - (widget._width) * ToggleButtonConsts().smallerPercent : widget._width, 
           height: (_isSelected) ? widget._height - (widget._height) * ToggleButtonConsts().smallerPercent  : widget._height,
           child: GestureDetector(
+
             onTap: () {},
-            onTapDown: (details) {_onPressed();},
+            onTapDown: (details) {_isSelectedChange();},
+            onTapUp: (details) { _onPressed();},
             onTapCancel: _isSelectedChange,
             child: AnimatedContainer(
               duration: ToggleButtonConsts().animationDuration,
@@ -103,11 +107,8 @@ class _ToggleButtonState extends State<ToggleButton> {
                 _isSelected ?  const BoxShadow() : simpleBoxShadow,
               ],
             ),
-            child: Padding(
-              padding: EdgeInsets.all(widget._width * 0.3),
-              child: FittedBox(fit: BoxFit.fitHeight,
-                child: _isSelected ? widget._selectedChild : widget._child
-              ),
+            child: FittedBox(fit: BoxFit.fitHeight,
+              child: _isSelected ? widget._selectedChild : widget._child
             )
               ),
           ),
@@ -143,7 +144,33 @@ class ToggleGroup extends StatefulWidget {
     required this.buttonWidth,
     required this.buttonHeight,
 
-    }) : super(key: key);
+    //Working like mainAxisAlginment in Column||Row
+    AxisAlignment? alignment,
+
+    //Buttons padding.
+    EdgeInsets? toggleButtonPadding,
+
+    //You can use this if you want to add padding for only first child.
+    EdgeInsets? firstChildButtonPadding,
+
+    //You can change scroll physic of listView.
+    ScrollPhysics? scrollPhysics,
+
+    //You can add widget end of toggle button list.
+    Widget? lastWidget,
+
+    //Border radius for border shape.
+    double? borderRadius,
+  
+
+    }) : 
+    toggleButtonPadding = toggleButtonPadding ?? EdgeInsets.zero,
+    firstChildButtonPadding = firstChildButtonPadding ?? toggleButtonPadding ?? EdgeInsets.zero,
+    alignment = alignment ?? AxisAlignment.spaceEvenly,
+    scrollPhysics = scrollPhysics ?? const NeverScrollableScrollPhysics(),
+    lastWidget = lastWidget ?? const SizedBox.shrink(),
+    borderRadius = borderRadius ?? 25,
+    super(key: key);
 
   final Function(List<bool> boolList) onPressed;
   final List<Widget> selectedChildList;
@@ -153,6 +180,12 @@ class ToggleGroup extends StatefulWidget {
   final List<bool> isSelectedBoolList;
   final double buttonWidth;
   final double buttonHeight;
+  final AxisAlignment alignment;
+  final EdgeInsets toggleButtonPadding;
+  final EdgeInsets firstChildButtonPadding;
+  final ScrollPhysics scrollPhysics;
+  final Widget lastWidget;
+  final double borderRadius;
 
   @override
   State<ToggleGroup> createState() => _ToggleGroupState();
@@ -196,39 +229,50 @@ class _ToggleGroupState extends State<ToggleGroup> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: widget.buttonHeight + widget.buttonHeight*0.1,
+      height: widget.buttonHeight + widget.buttonHeight*0.3,
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {  
           return ListView.separated(
-          physics: const NeverScrollableScrollPhysics(),
+          physics: widget.scrollPhysics,
           scrollDirection: Axis.horizontal,
-          itemCount: widget.selectedChildList.length,
+          itemCount: widget.selectedChildList.length + 1,
           itemBuilder: (context, index) {
-            return ToggleButton(
-              width: widget.buttonWidth,
-              heigth: widget.buttonHeight,
-              onpressed: (isSelected) {
-                setState(() {
-                  widget.isSelectedBoolList.fillRange(0, widget.isSelectedBoolList.length, false);
-                  widget.isSelectedBoolList[index] = true;
-                  widget.onPressed.call(widget.isSelectedBoolList);
-                });
-              }, 
-              notSelectedChild: widget.notSelectedChildList[index],
-              notSelectedColor: widget.notSelectedColor,
-              selectedChild: widget.selectedChildList[index],
-              selectedColor: widget.selectedColor, 
-              isSelected: widget.isSelectedBoolList[index],
-            );
+            return index != widget.selectedChildList.length ? Padding(
+              padding: index == 0 ?  widget.firstChildButtonPadding: widget.toggleButtonPadding,
+              child: ToggleButton(
+                width: widget.buttonWidth,
+                heigth: widget.buttonHeight,
+                onpressed: (isSelected) {
+                  setState(() {
+                    widget.isSelectedBoolList.fillRange(0, widget.isSelectedBoolList.length, false);
+                    widget.isSelectedBoolList[index] = true;
+                    widget.onPressed.call(widget.isSelectedBoolList);
+                  });
+                }, 
+                notSelectedChild: widget.notSelectedChildList[index],
+                notSelectedColor: widget.notSelectedColor,
+                selectedChild: widget.selectedChildList[index],
+                selectedColor: widget.selectedColor, 
+                isSelected: widget.isSelectedBoolList[index],
+                borderRadius: widget.borderRadius,
+              ),
+            ): Padding(
+              padding: widget.toggleButtonPadding,
+              child: widget.lastWidget,
+            ) ;
           }, separatorBuilder: (BuildContext context, int index) { 
             //For MainAxisAlignment.spaceevenly effect, calculating space between buttons.
-            return index != widget.selectedChildList.length - 1 ? SizedBox(width: (constraints.maxWidth - (widget.buttonWidth*widget.selectedChildList.length)) / (widget.selectedChildList.length - 1)): const SizedBox.shrink();
+            return (widget.alignment == AxisAlignment.spaceEvenly) ? 
+            (index != widget.selectedChildList.length - 1 ? SizedBox(width: (constraints.maxWidth - (widget.buttonWidth*widget.selectedChildList.length)) / (widget.selectedChildList.length - 1)): const SizedBox.shrink()): 
+            (const SizedBox.shrink());
             },
               );
-  }),
+        }),
     );
   }
 }
+
+enum AxisAlignment {none, spaceEvenly}
 
 class ToggleButtonConsts {
   final Duration animationDuration = const Duration(milliseconds: 100);

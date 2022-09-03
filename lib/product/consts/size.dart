@@ -41,9 +41,9 @@ extension FontSizesExtension on FontSizes{
   double value(){
     switch(this){
       case FontSizes.header:
-        return 52.0;
+        return 44.0;
       case FontSizes.subHeader:
-        return 26.0;
+        return 23.0;
     }
   }
 }
