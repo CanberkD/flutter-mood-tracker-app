@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
@@ -8,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../model/mood_model.dart';
 
 class SharedPrefInstance {
+  //SharedPreference instance singleton.
   static late final SharedPreferences instance;
 
   static Future<SharedPreferences> init() async => instance = await SharedPreferences.getInstance();
@@ -15,8 +15,7 @@ class SharedPrefInstance {
 
 class SharedPref{
 
-  //Fake recordedMoodList
-  List<RecordedMoodModel> get recordedMoodModelList => [
+  List<RecordedMoodModel> recordedMoodModelList =  [
     RecordedMoodModel(moodList: [
       MoodModel(
       activity: 'Work', hour: '12:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone', 'John'], 
@@ -43,6 +42,36 @@ class SharedPref{
     ], date: MoodDateModel(day: 1, month: 9, year: 2022)),
   ];
 
+  void addToRecordedMoodModelList (RecordedMoodModel item) => recordedMoodModelList.add(item);
+
+  //This method try to find record of selected date. if do not, return null.
+  RecordedMoodModel? getSelectedDateRecorded(MoodDateModel moodDate){
+    for(var item in recordedMoodModelList){
+      if(item.date.toString() == moodDate.toString()){
+        return item;
+      }
+    }
+    return null;
+  }
+  //This method adding moodmodel with check isTodayRecordedMoodModel exist. If exist, add into recordedMoodModel. If not exist, creates new one.
+  void addMoodToRecordedDate(RecordedMoodModel moodModel){
+    //First try to find record of today, if did not found, create new recordedMoodModel.
+    if(getSelectedDateRecorded(moodModel.date) == null) { // Check is exist
+      recordedMoodModelList.add(moodModel); //if not exist directly add record.
+    }
+    else { //if exist
+      getSelectedDateRecorded(moodModel.date)!.moodList.add(moodModel.moodList.first); //Add mood to record already exist.
+      RecordedMoodModel record = getSelectedDateRecorded(moodModel.date)!; // Saving record because will remove next line.
+      recordedMoodModelList.removeWhere((element) => ( // Removing record already exist.
+          moodModel.date.toString() == element.date.toString()
+        )
+      );
+      recordedMoodModelList.add(record); // Record of shortly before updated moodlist's adding recordedMoodList.
+      //TODO: clear shared then save new item added list shared pref. 
+    }
+  }
+  
+  //This method set today item list in homepage.
   List<MoodModel> makeToDayList(){
     for(var item in recordedMoodModelList){
       print(MoodDateModel(day: ProjectDateTime().day, month: ProjectDateTime().month, year: ProjectDateTime().year).toString().toString());
@@ -54,6 +83,7 @@ class SharedPref{
     return [];
   }
 
+  //This method set infogram item list in homepage.
   List<InfogramModel> setInfogramModelList(){
     List<String> happyPeopleList = [];
     List<String> sadPeopleList = [];
@@ -117,22 +147,14 @@ class SharedPref{
     }
   }
 
+  //This method getting activity and people list in storage saved by user. 
   ObservableList<String> activitys = ObservableList.of(SharedPrefInstance.instance.getStringList(SharedPrefKeys.activity_list.name) ?? []);
   ObservableList<String> peopleList = ObservableList.of(SharedPrefInstance.instance.getStringList(SharedPrefKeys.people_list.name) ?? []);
+  
+  //This method saves to storage activity||peopleList added by user. 
   void saveStringListToStorage(List<String> list, SharedPrefKeys key){
     SharedPrefInstance.instance.setStringList(key.name, list);
   }
-
-  List<Widget> activityTextWidgetList (Color childTextColor){
-    List<Widget> list = [];
-    for(var item in activitys){
-      list.add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Text(item, style: TextStyle(color: childTextColor),),
-      ));
-    }    
-    return list;
-  } 
 
 }
 
