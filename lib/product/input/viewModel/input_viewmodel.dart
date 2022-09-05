@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mood_tracker/product/consts/color.dart';
 import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
+import 'package:flutter_mood_tracker/product/input/view/widgets.dart';
+import 'package:flutter_mood_tracker/product/model/mood_model.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:mobx/mobx.dart';
 part 'input_viewmodel.g.dart';
@@ -9,9 +10,48 @@ part 'input_viewmodel.g.dart';
 class InputViewModel = _InputViewModelBase with _$InputViewModel;
 
 abstract class _InputViewModelBase with Store {
+  late final SharedPref sharedPref;
+
+  @observable
+  late ScrollController activityScrollController = ScrollController();
+  @action
+  void scrollToFirstActivty () => activityScrollController.animateTo(0, duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+
+  @observable
+  late ScrollController peopleScrollController = ScrollController();
+  @action
+  void scrollToFirstPeople () => peopleScrollController.animateTo(0, duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+
+  @observable
+  late List<String> activityList = List.empty(growable: true);
+  @action
+  void addItemToActivitys (String item) => activityList.add(item);  
+
+  @observable
+  List<bool> isActivityBoolList = List.empty(growable: true);
+  @action 
+  void resetActivityBoolList () => isActivityBoolList.fillRange(0, isActivityBoolList.length, false);
+
+  @observable
+  late List<String> peopleList = List.empty(growable: true);
+  @action
+  void addItemToPeopleList (String item) => peopleList.add(item);
+  
+  @observable
+  List<bool> isPeoplesBoolList = List.empty(growable: true);
 
   List<bool> isButtonSelectedList = [true, false, false];
 
+  _InputViewModelBase() {
+    activityScrollController = ScrollController();
+    sharedPref = SharedPref();
+    activityList = sharedPref.activitys;
+    isActivityBoolList = ObservableList.of(List.filled(activityList.length, false));
+    peopleList = sharedPref.peopleList;
+    isPeoplesBoolList = List.filled(peopleList.length, false, growable: true);
+  }
+
+  //Page view setup params.
   List<Widget> selectedMoodWidgets = [
     Padding(
       padding: EdgeInsets.all(PaddingSizes.toggleButtonChildPadding.value()),
@@ -26,7 +66,6 @@ abstract class _InputViewModelBase with Store {
       child: Image.asset(PngPaths(themeInfo: ThemeInfo.light).sad),
     )
   ];
-
   List<Widget> notSelectedMoodWidgets = [
     Padding(
       padding: EdgeInsets.all(PaddingSizes.toggleButtonChildPadding.value()),
@@ -42,16 +81,116 @@ abstract class _InputViewModelBase with Store {
     ),
   ];
 
-  List<bool> activityBoolList = List.filled(SharedPref().activitys.length, false);
-  List<Widget> activtyChildWidgetsNotSelected = SharedPref().getActivityWidgetList(ProjectColors.primaryBlack.value());
-  List<Widget> activtyChildWidgetsSelected = SharedPref().getActivityWidgetList(ProjectColors.primaryWhite.value());
-  
-  List<String> peoplesList = SharedPref().peopleList;
-  List<bool> isPeoplesBoolList = List.filled(SharedPref().peopleList.length, false);
+  void saveButtonClicked() {
+    MoodModel moodModel = MoodModel(
+      activity: 'Work',
+      hour: '12:22',
+      moodImgPath: 'assets/png/dark/happy.png',
+      peoplesWith: ['Alone', 'John'],
+    );
 
-  void saveButtonClicked(){
-    print(isButtonSelectedList);
-    print(activityBoolList);
-    print(isPeoplesBoolList);
+    print(findMood(isButtonSelectedList));
+    print(findActivity(isActivityBoolList, activityList));
+    print(findPeopleList(isPeoplesBoolList, peopleList));
   }
+  @action
+  void activityAddButtonClicked(BuildContext context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        isScrollControlled: true,
+        context: context,
+        builder: (context) => AddItemWidget(
+              isActivity: true,
+              onAddPressed: (text) {
+                saveActivityOnPressed(text, context);
+              },
+            ));
+  }
+  @action
+  void peopleAddButtonClicked(BuildContext context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) => AddItemWidget(
+              isActivity: false,
+              onAddPressed: (String text) {
+                savePeopleOnPressed(text, context);
+              },
+            ));
+  }
+
+  void savePeopleOnPressed(String text, BuildContext context){
+    addItemToPeopleList(text);
+    isPeoplesBoolList.add(true);
+    peopleList = List.of(peopleList.reversed);
+    isPeoplesBoolList = List.of(isPeoplesBoolList.reversed);
+    Navigator.pop(context);
+    scrollToFirstPeople();
+    sharedPref.saveStringListToStorage(peopleList, SharedPrefKeys.people_list);
+  }
+  void saveActivityOnPressed(String text, BuildContext context){
+    addItemToActivitys(text);
+    isActivityBoolList.add(true);
+    activityList = List.from(activityList.reversed);
+    isActivityBoolList = List.from(isActivityBoolList.reversed);
+    Navigator.pop(context);
+    scrollToFirstActivty();
+    sharedPref.saveStringListToStorage(activityList, SharedPrefKeys.activity_list);
+  }
+  
+  List<String> findPeopleList(List<bool> boolList, List<String> peopleList) {
+    List<String> finalList = [];
+
+    for (int i = 0; i < boolList.length; i++) {
+      if (boolList[i] == true) {
+        finalList.add(peopleList[i]);
+      }
+    }
+    if (finalList.isNotEmpty) {
+      return finalList;
+    } else {
+      return ['Alone'];
+    }
+  }
+
+  String findActivity(List<bool> boolList, List<String> activityList) {
+    List<String> finalList;
+    for (int i = 0; i < boolList.length; i++) {
+      if (boolList[i] == true) {
+        return activityList[i];
+      }
+    }
+    return 'Nothing';
+  }
+
+  String findMood(List<bool> list) {
+    for (int i = 0; i < 3; i++) {
+      if (list[i] == true) {
+        switch (i) {
+          case 0:
+            return PngPaths(themeInfo: ThemeInfo.dark).happy;
+          case 1:
+            return PngPaths(themeInfo: ThemeInfo.dark).notr;
+          case 2:
+            return PngPaths(themeInfo: ThemeInfo.dark).sad;
+        }
+      }
+    }
+    return '';
+  }
+
+  List<Widget> getActivityWidgetList(Color textColor) {
+    List<Widget> list = List.empty(growable: true);
+  
+    for (var item in activityList) {
+      list.add(Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 8.0,
+        ),
+        child: Text(item, style: TextStyle(color: textColor)),
+      ));
+    }
+    return list;
+  }
+
 }

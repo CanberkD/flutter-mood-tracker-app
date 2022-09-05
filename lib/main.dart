@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/input/view/input_view.dart';
+import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:flutter_mood_tracker/product/theme/theme.dart';
 
-void main() {
+Future<void> main() async {
+
+  //For sharedPrefInstance
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPrefInstance.init();
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
 
   // This widget is the root of your application.
   @override

@@ -32,6 +32,6 @@ class ProjectText {
   static const String inputpageTitleChoose = "Choose your mood.";
   static const String inputpageMoodSelectionTitle = "How do you feel?";
   static const String inputpageActivitySelectionTitle = "What you doing right now?";
-  static const String inputpagePeopleSelectionTitle = "People you are with?";
+  static const String inputpagePeopleSelectionTitle = "People you are with:";
   static const String inputpageSaveButtonText = "Save";
 }

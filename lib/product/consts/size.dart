@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 
-enum ButtonSize {iconbuttonsize,}
+enum ButtonSize {iconbuttonsize, simpleButtonWidth}
 
 extension ButtonSizeExtension on ButtonSize{
   double value(){
     switch(this){
       case ButtonSize.iconbuttonsize:
         return 30.0;
-      
+      case ButtonSize.simpleButtonWidth:
+        return 150;
     }
   }
 }

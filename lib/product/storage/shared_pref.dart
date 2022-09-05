@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
+import 'package:mobx/mobx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/mood_model.dart';
+
+class SharedPrefInstance {
+  static late final SharedPreferences instance;
+
+  static Future<SharedPreferences> init() async => instance = await SharedPreferences.getInstance();
+}
 
 class SharedPref{
 
@@ -34,7 +42,6 @@ class SharedPref{
       ),
     ], date: MoodDateModel(day: 1, month: 9, year: 2022)),
   ];
-
 
   List<MoodModel> makeToDayList(){
     for(var item in recordedMoodModelList){
@@ -110,17 +117,10 @@ class SharedPref{
     }
   }
 
-  List<String> activitys = ['Lecture', 'Work',];
-
-  List<Widget> getActivityWidgetList(Color textColor){
-    List<Widget> list = [];
-    for(var item in activitys){
-      list.add(Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0,),
-        child: Text(item, style: TextStyle(color: textColor)),
-      ));
-    }
-    return list;
+  ObservableList<String> activitys = ObservableList.of(SharedPrefInstance.instance.getStringList(SharedPrefKeys.activity_list.name) ?? []);
+  ObservableList<String> peopleList = ObservableList.of(SharedPrefInstance.instance.getStringList(SharedPrefKeys.people_list.name) ?? []);
+  void saveStringListToStorage(List<String> list, SharedPrefKeys key){
+    SharedPrefInstance.instance.setStringList(key.name, list);
   }
 
   List<Widget> activityTextWidgetList (Color childTextColor){
@@ -134,6 +134,9 @@ class SharedPref{
     return list;
   } 
 
-  List<String> peopleList = ['John', 'Arthur', 'Dutch', 'Bill', 'Chavier'];
+}
 
+enum SharedPrefKeys {
+  activity_list,
+  people_list,
 }

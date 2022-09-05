@@ -1,5 +1,6 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_mood_tracker/core/components/basic/bottom_sheet_divider.dart';
 import 'package:flutter_mood_tracker/core/components/button/toggle_button.dart';
 import 'package:flutter_mood_tracker/product/components/button/icon_button.dart';
 import 'package:flutter_mood_tracker/product/components/text/header_text.dart';
@@ -11,34 +12,41 @@ import 'package:flutter_mood_tracker/product/consts/text.dart';
 
 import '../viewModel/input_viewmodel.dart';
 
-
 //--------------------------------------------------------------------------------------------------------------------
 
 class SaveButton extends StatelessWidget {
   const SaveButton({
     Key? key,
     required InputViewModel model,
-  }) : _model = model, super(key: key);
+  })  : _model = model,
+        super(key: key);
 
   final InputViewModel _model;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: InputViewConsts.saveButtonPadding, vertical: PaddingSizes.mainColumnVerticalPadding.value()),
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(ProjectColors.primaryWhite.value()),
-          overlayColor: MaterialStateProperty.resolveWith(
+      padding:
+          EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value()),
+      child: SizedBox(
+        width: ButtonSize.simpleButtonWidth.value(),
+        child: ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all(ProjectColors.primaryWhite.value()),
+              overlayColor: MaterialStateProperty.resolveWith(
                 (states) {
                   return states.contains(MaterialState.pressed)
                       ? ProjectColors.primaryBlue.value().withOpacity(0.2)
                       : null;
                 },
               )),
-        onPressed: _model.saveButtonClicked,
-        child: Text(ProjectText.inputpageSaveButtonText, style: TextStyle(color: ProjectColors.primaryBlack.value())),
-    ));
+          onPressed: _model.saveButtonClicked,
+          child: Text(ProjectText.inputpageSaveButtonText,
+              style: TextStyle(color: ProjectColors.primaryBlack.value())),
+        ),
+      ),
+    );
   }
 }
 
@@ -50,8 +58,10 @@ class PeopleSelectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value(), bottom: PaddingSizes.small.value()),
-      child: const SubTitle(text: ProjectText.inputpagePeopleSelectionTitle),  
+      padding: EdgeInsets.only(
+          top: PaddingSizes.mainColumnVerticalPadding.value(),
+          bottom: PaddingSizes.small.value()),
+      child: const SubTitle(text: ProjectText.inputpagePeopleSelectionTitle),
     );
   }
 }
@@ -65,9 +75,9 @@ class ActivitySelectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          top: PaddingSizes.mainColumnVerticalPadding.value(),
-          bottom: PaddingSizes.small.value(),
-          ),
+        top: PaddingSizes.mainColumnVerticalPadding.value(),
+        bottom: PaddingSizes.small.value(),
+      ),
       child: const SubTitle(text: ProjectText.inputpageActivitySelectionTitle),
     );
   }
@@ -77,7 +87,8 @@ class MoodSelectionWidget extends StatelessWidget {
   const MoodSelectionWidget({
     Key? key,
     required InputViewModel model,
-  }) : _model = model, super(key: key);
+  })  : _model = model,
+        super(key: key);
 
   final InputViewModel _model;
 
@@ -99,8 +110,8 @@ class MoodSelectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-          top: PaddingSizes.mainColumnVerticalPadding.value()),
+      padding:
+          EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value()),
       child: const SubTitle(text: ProjectText.inputpageMoodSelectionTitle),
     );
   }
@@ -116,8 +127,7 @@ class MainHeader extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: PaddingSizes.mainColumHorizontalPadding.value()),
-      child:
-          const HeaderTextWidget(text: ProjectText.inputpageTitleChoose),
+      child: const HeaderTextWidget(text: ProjectText.inputpageTitleChoose),
     );
   }
 }
@@ -138,10 +148,9 @@ class ButtonClose extends StatelessWidget {
         child: CircularIconButton(
             onPressed: () {},
             child: Padding(
-              padding: EdgeInsets.all(
-                  PaddingSizes.iconButtonChildPadding.value()),
-              child:
-                  Image.asset(PngPaths(themeInfo: ThemeInfo.dark).close),
+              padding:
+                  EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()),
+              child: Image.asset(PngPaths(themeInfo: ThemeInfo.dark).close),
             )),
       ),
     );
@@ -155,7 +164,8 @@ class PeopleSelection extends StatelessWidget {
   const PeopleSelection({
     Key? key,
     required InputViewModel model,
-  }) : _model = model, super(key: key);
+  })  : _model = model,
+        super(key: key);
 
   final InputViewModel _model;
 
@@ -163,40 +173,48 @@ class PeopleSelection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: InputViewConsts.activitySelectionButtonHeight*1.2,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: _model.peoplesList.length + 1,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: index == 0 ? 
-            EdgeInsets.symmetric(horizontal: PaddingSizes.mainColumHorizontalPadding.value()) :
-            EdgeInsets.only(right: PaddingSizes.medium.value()) ,
-            child: index != _model.peoplesList.length? 
-             ToggleButton(
-              borderRadius: InputViewConsts.peopleSelectionBorderRadius,
-              width: InputViewConsts.activitySelectionButtonWidth,
-              heigth: InputViewConsts.activitySelectionButtonHeight,
-              onpressed: (isSelected) {
-                _model.isPeoplesBoolList[index] = isSelected;
-              }, 
-              notSelectedColor: ProjectColors.primaryWhite.value(), 
-              selectedColor: ProjectColors.primaryBlue.value(), 
-              notSelectedChild: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(_model.peoplesList[index], style: TextStyle(color: ProjectColors.primaryBlack.value())),
-              ), 
-              selectedChild: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(_model.peoplesList[index], style: TextStyle(color: ProjectColors.primaryWhite.value())),
-              ), 
-              isSelected: _model.isPeoplesBoolList[index],
-            ): 
-            CircularAddButton(model: _model, isActivity: false)
-            ,
-          );
-        },
-      ),
+      height: InputViewConsts.activitySelectionButtonHeight * 1.2,
+      child: Observer(builder: (_) {
+        return ListView.builder(
+          controller: _model.peopleScrollController,
+          scrollDirection: Axis.horizontal,
+          itemCount: _model.peopleList.length + 1,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: index == 0
+                  ? EdgeInsets.symmetric(
+                      horizontal:
+                          PaddingSizes.mainColumHorizontalPadding.value())
+                  : EdgeInsets.only(right: PaddingSizes.medium.value()),
+              child: index != _model.peopleList.length
+                  ? ToggleButton(
+                      borderRadius: InputViewConsts.peopleSelectionBorderRadius,
+                      width: InputViewConsts.activitySelectionButtonWidth,
+                      heigth: InputViewConsts.activitySelectionButtonHeight,
+                      onpressed: (isSelected) {
+                        _model.isPeoplesBoolList[index] = isSelected;
+                      },
+                      notSelectedColor: ProjectColors.primaryWhite.value(),
+                      selectedColor: ProjectColors.primaryBlue.value(),
+                      notSelectedChild: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(_model.peopleList[index],
+                            style: TextStyle(
+                                color: ProjectColors.primaryBlack.value())),
+                      ),
+                      selectedChild: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(_model.peopleList[index],
+                            style: TextStyle(
+                                color: ProjectColors.primaryWhite.value())),
+                      ),
+                      isSelected: _model.isPeoplesBoolList[index],
+                    )
+                  : CircularAddButton(model: _model, isActivity: false),
+            );
+          },
+        );
+      }),
     );
   }
 }
@@ -205,25 +223,28 @@ class MoodSelectionGroup extends StatelessWidget {
   const MoodSelectionGroup({
     Key? key,
     required InputViewModel model,
-  }) : _model = model, super(key: key);
+  })  : _model = model,
+        super(key: key);
 
   final InputViewModel _model;
 
   @override
   Widget build(BuildContext context) {
     return ToggleGroup(
-            buttonWidth: InputViewConsts.moodSelectionButtonWidth,
-            buttonHeight: InputViewConsts.moodSelectionButtonHeight,
-            borderRadius: InputViewConsts.moodSelectionButtonRadius,
-            selectedChildList: _model.selectedMoodWidgets,
-            notSelectedChildList: _model.notSelectedMoodWidgets,
-            selectedColor: ProjectColors.primaryBlue.value(), 
-            notSelectedColor: ProjectColors.primaryWhite.value(), 
-            isSelectedBoolList: [_model.isButtonSelectedList[0], _model.isButtonSelectedList[1], _model.isButtonSelectedList[2]],
-            onPressed: (List<bool> boolList) { 
-
-             },
-            );
+      buttonWidth: InputViewConsts.moodSelectionButtonWidth,
+      buttonHeight: InputViewConsts.moodSelectionButtonHeight,
+      borderRadius: InputViewConsts.moodSelectionButtonRadius,
+      selectedChildList: _model.selectedMoodWidgets,
+      notSelectedChildList: _model.notSelectedMoodWidgets,
+      selectedColor: ProjectColors.primaryBlue.value(),
+      notSelectedColor: ProjectColors.primaryWhite.value(),
+      isSelectedBoolList: [
+        _model.isButtonSelectedList[0],
+        _model.isButtonSelectedList[1],
+        _model.isButtonSelectedList[2]
+      ],
+      onPressed: (List<bool> boolList) {},
+    );
   }
 }
 
@@ -231,43 +252,70 @@ class ActivitySelectionGroup extends StatelessWidget {
   const ActivitySelectionGroup({
     Key? key,
     required InputViewModel model,
-  }) : _model = model, super(key: key);
+  })  : _model = model,
+        super(key: key);
 
   final InputViewModel _model;
 
   @override
   Widget build(BuildContext context) {
-    return ToggleGroup(
-      scrollPhysics: const AlwaysScrollableScrollPhysics(),
-      toggleButtonPadding: EdgeInsets.only(right: PaddingSizes.mainColumHorizontalPadding.value()),
-      firstChildButtonPadding:  EdgeInsets.only(
-        right: PaddingSizes.mainColumHorizontalPadding.value(), 
-        left: PaddingSizes.mainColumHorizontalPadding.value()
-      ),
-      alignment: AxisAlignment.none,
-      buttonWidth: InputViewConsts.activitySelectionButtonWidth,
-      buttonHeight: InputViewConsts.activitySelectionButtonHeight,
-      selectedChildList: _model.activtyChildWidgetsSelected,
-      notSelectedChildList: _model.activtyChildWidgetsNotSelected,
-      selectedColor: ProjectColors.primaryBlue.value(), 
-      notSelectedColor: ProjectColors.primaryWhite.value(), 
-      isSelectedBoolList: _model.activityBoolList,
-      lastWidget: SizedBox(
-        width: ButtonSize.iconbuttonsize.value(),
-        height: ButtonSize.iconbuttonsize.value(),
-        child: CircularAddButton(model: _model, isActivity: true)
-      ),
-      onPressed: (List<bool> boolList) { 
-
-       },
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: InputViewConsts.activitySelectionButtonHeight * 1.2,
+      child: Observer(builder: (_) {
+        return ListView.builder(
+          controller: _model.activityScrollController,
+          scrollDirection: Axis.horizontal,
+          itemCount: _model.activityList.length + 1,
+          itemBuilder: (context, index) {
+            return Observer(builder: (_) {
+              return Padding(
+                padding: index == 0
+                    ? EdgeInsets.symmetric(
+                        horizontal:
+                            PaddingSizes.mainColumHorizontalPadding.value())
+                    : EdgeInsets.only(right: PaddingSizes.medium.value()),
+                child: index != _model.activityList.length
+                    ? ToggleButton(
+                        borderRadius:
+                            InputViewConsts.peopleSelectionBorderRadius,
+                        width: InputViewConsts.activitySelectionButtonWidth,
+                        heigth: InputViewConsts.activitySelectionButtonHeight,
+                        onpressed: (isSelected) {
+                          _model.resetActivityBoolList();
+                          _model.isActivityBoolList[index] = isSelected;
+                        },
+                        notSelectedColor: ProjectColors.primaryWhite.value(),
+                        selectedColor: ProjectColors.primaryBlue.value(),
+                        notSelectedChild: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(_model.activityList[index],
+                              style: TextStyle(
+                                  color: ProjectColors.primaryBlack.value())),
+                        ),
+                        selectedChild: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(_model.activityList[index],
+                              style: TextStyle(
+                                  color: ProjectColors.primaryWhite.value())),
+                        ),
+                        isSelected: _model.isActivityBoolList[index],
+                      )
+                    : CircularAddButton(model: _model, isActivity: true),
+              );
+            });
+          },
+        );
+      }),
     );
   }
 }
 
 class CircularAddButton extends StatelessWidget {
-
   const CircularAddButton({
-    Key? key, required  this.model, required this.isActivity,
+    Key? key,
+    required this.model,
+    required this.isActivity,
   }) : super(key: key);
 
   final bool isActivity; // activity or peoples
@@ -277,19 +325,78 @@ class CircularAddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircularIconButton(
       bgColor: ProjectColors.primaryWhite.value(),
-      onPressed: () { 
-        
+      onPressed: () {
+        isActivity
+            ? model.activityAddButtonClicked(context)
+            : model.peopleAddButtonClicked(context);
       },
-    child: Padding(
-      padding: EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()),
-      child: Image.asset(PngPaths(themeInfo: ThemeInfo.dark).plus),
-    ),
+      child: Padding(
+        padding: EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()),
+        child: Image.asset(PngPaths(themeInfo: ThemeInfo.dark).plus),
+      ),
+    );
+  }
+}
+
+class AddItemWidget extends StatelessWidget {
+  AddItemWidget(
+      {Key? key, required this.isActivity, required this.onAddPressed})
+      : super(key: key);
+
+  final bool isActivity;
+  final Function(String text) onAddPressed;
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.7,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: PaddingSizes.large.value()),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const BottomSheetTopLine(),
+            SubTitle(
+                padding: EdgeInsets.only(top: PaddingSizes.small.value()),
+                alignment: Alignment.center,
+                text: isActivity ? 'Add Activity' : 'Add Person'),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextField(
+                        decoration: InputDecoration(
+                            hintText: isActivity ? 'Activity' : 'Name',
+                            counterText: ''),
+                        maxLength: 10,
+                        controller: _controller,
+                      ),
+                      SizedBox(
+                        width: ButtonSize.simpleButtonWidth.value(),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              if (_controller.text.length >= 3) {
+                                onAddPressed.call(_controller.text);
+                              }
+                            },
+                            child: const Text('Add')),
+                      )
+                    ]),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
 //********************************************************************************************************************
-
 
 class InputViewConsts {
   static double activitySelectionButtonHeight = 30;
@@ -301,5 +408,5 @@ class InputViewConsts {
 
   static double peopleSelectionBorderRadius = 25.0;
 
-  static double saveButtonPadding = 140; 
+  static double saveButtonPadding = 140;
 }
