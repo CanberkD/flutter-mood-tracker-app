@@ -14,16 +14,31 @@ part 'homepage_viewmodel.g.dart';
 class HomePageViewModel = _HomePageViewModelBase with _$HomePageViewModel;
 
 abstract class _HomePageViewModelBase with Store {
+  late final SharedPref sharedPref;
+  late final ProjectDateTime _dateTime;
+  late final PngPaths pngPaths;
   
-  PngPaths pngPaths = PngPaths(themeInfo: ThemeInfo.dark);
-  late final ProjectDateTime _dateTime = ProjectDateTime(dateTime: DateTime.now());
+  _HomePageViewModelBase(){
+
+    sharedPref = SharedPref();
+    List<dynamic> recordedList = sharedPref.getListFromStorage() ?? [];
+
+    _dateTime = ProjectDateTime(dateTime: DateTime.now());
+    pngPaths = PngPaths(themeInfo: ThemeInfo.dark);
   
+  }
+  
+  //Getting saved mood of today. 
+  late List<MoodModel> todayList = sharedPref.makeToDayList();  
+  //Getting infogram item list calculated in sharedPref.
+  late List<InfogramModel> infogramList = sharedPref.setInfogramModelList();
+  //Getting all recorded list.
+  late List<RecordedMoodModel> recordedList = sharedPref.recordedMoodModelList;
+
+   
+  //Getter method for date string under the Hello text.
   String get helloBarDateStr => _dateTime.formattedDate;
 
-  List<MoodModel> todayList = SharedPref().makeToDayList();
-  
 
-  List<InfogramModel> infogramList = SharedPref().setInfogramModelList();
 
-  List<RecordedMoodModel> recordedList = SharedPref().recordedMoodModelList;
 }

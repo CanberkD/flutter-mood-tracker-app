@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mood_tracker/product/input/view/input_view.dart';
+import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:flutter_mood_tracker/product/theme/theme.dart';
 
@@ -22,21 +22,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',  
       theme: CustomThemeData.light(),
-      home: const MyHomePage(),
+      initialRoute: Routes.home.name,
+      routes: NavigationRoutes().routes,
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return const InputView();
   }
 }

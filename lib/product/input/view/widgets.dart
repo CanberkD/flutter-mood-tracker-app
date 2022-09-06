@@ -41,7 +41,7 @@ class SaveButton extends StatelessWidget {
                       : null;
                 },
               )),
-          onPressed: _model.saveButtonClicked,
+          onPressed: (){_model.saveButtonClicked(context);},
           child: Text(ProjectText.inputpageSaveButtonText,
               style: TextStyle(color: ProjectColors.primaryBlack.value())),
         ),
@@ -135,7 +135,10 @@ class MainHeader extends StatelessWidget {
 class ButtonClose extends StatelessWidget {
   const ButtonClose({
     Key? key,
+    required this.model,
   }) : super(key: key);
+
+  final InputViewModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +149,7 @@ class ButtonClose extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerRight,
         child: CircularIconButton(
-            onPressed: () {},
+            onPressed: () {model.pageCloseButtonPressed(context);},
             child: Padding(
               padding:
                   EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()),
@@ -243,7 +246,9 @@ class MoodSelectionGroup extends StatelessWidget {
         _model.isButtonSelectedList[1],
         _model.isButtonSelectedList[2]
       ],
-      onPressed: (List<bool> boolList) {},
+      onPressed: (List<bool> boolList) {
+        _model.isButtonSelectedList = boolList;
+      },
     );
   }
 }

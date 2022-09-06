@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_mood_tracker/product/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
@@ -14,33 +16,36 @@ class SharedPrefInstance {
 }
 
 class SharedPref{
-
-  List<RecordedMoodModel> recordedMoodModelList =  [
-    RecordedMoodModel(moodList: [
-      MoodModel(
-      activity: 'Work', hour: '12:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone', 'John'], 
-      ),
-      MoodModel(
-      activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone'], 
-      ),
-    ], date: MoodDateModel(day: 3, month: 9, year: 2022)),
-    RecordedMoodModel(moodList: [
-      MoodModel(
-      activity: 'Work', hour: '10:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone'], 
-      ),
-      MoodModel(
-      activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Alone', 'Bill', 'Dutch'], 
-      ),
-    ], date: MoodDateModel(day: 2, month: 9, year: 2022)),
-    RecordedMoodModel(moodList: [
-      MoodModel(
-      activity: 'Work', hour: '10:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Alone'], 
-      ),
-      MoodModel(
-      activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Bill',], 
-      ),
-    ], date: MoodDateModel(day: 1, month: 9, year: 2022)),
-  ];
+  late List<RecordedMoodModel> recordedMoodModelList = List.empty(growable: true);
+  SharedPref(){
+    recordedMoodModelList = getListFromStorage() ?? [];
+  }
+  //List<RecordedMoodModel> recordedMoodModelList =  [
+  //  RecordedMoodModel(moodList: [
+  //    MoodModel(
+  //    activity: 'Work', hour: '12:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone', 'John'], 
+  //    ),
+  //    MoodModel(
+  //    activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone'], 
+  //    ),
+  //  ], date: MoodDateModel(day: 3, month: 9, year: 2022)),
+  //  RecordedMoodModel(moodList: [
+  //    MoodModel(
+  //    activity: 'Work', hour: '10:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone'], 
+  //    ),
+  //    MoodModel(
+  //    activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Alone', 'Bill', 'Dutch'], 
+  //    ),
+  //  ], date: MoodDateModel(day: 2, month: 9, year: 2022)),
+  //  RecordedMoodModel(moodList: [
+  //    MoodModel(
+  //    activity: 'Work', hour: '10:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Alone'], 
+  //    ),
+  //    MoodModel(
+  //    activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Bill',], 
+  //    ),
+  //  ], date: MoodDateModel(day: 1, month: 9, year: 2022)),
+  //];
 
   void addToRecordedMoodModelList (RecordedMoodModel item) => recordedMoodModelList.add(item);
 
@@ -67,15 +72,32 @@ class SharedPref{
         )
       );
       recordedMoodModelList.add(record); // Record of shortly before updated moodlist's adding recordedMoodList.
-      //TODO: clear shared then save new item added list shared pref. 
     }
+   saveListToStorage(recordedMoodModelList); //Saving new list to storage.
+  }
+  //First RecordedMoodModelList encoding to json then saving to storga.  
+  void saveListToStorage(List<RecordedMoodModel> list){
+    List<String> jsonRecordedMoodModelList = list.map((element) => jsonEncode(element.toJson())).toList();
+    SharedPrefInstance.instance.setStringList(SharedPrefKeys.recorded_list.name, jsonRecordedMoodModelList);
+  }
+  //This method getting recordedMoodModels in storage.
+  List<RecordedMoodModel>? getListFromStorage(){
+    final itemsString = SharedPrefInstance.instance.getStringList(SharedPrefKeys.recorded_list.name);
+    if (itemsString?.isNotEmpty ?? false) {
+      return itemsString!.map((element) {
+        final json = jsonDecode(element);
+        if (json is Map<String, dynamic>) {
+          return RecordedMoodModel.fromJson(json);
+        }
+        return RecordedMoodModel(date: MoodDateModel(day: 1,month: 1,year: 2022), moodList: []);
+      }).toList();
+    }
+    return null;
   }
   
   //This method set today item list in homepage.
   List<MoodModel> makeToDayList(){
     for(var item in recordedMoodModelList){
-      print(MoodDateModel(day: ProjectDateTime().day, month: ProjectDateTime().month, year: ProjectDateTime().year).toString().toString());
-      print(item.date.toString());
       if(MoodDateModel(day: ProjectDateTime().day, month: ProjectDateTime().month, year: ProjectDateTime().year).toString() == item.date.toString()){
         return item.moodList;
       }
@@ -87,20 +109,27 @@ class SharedPref{
   List<InfogramModel> setInfogramModelList(){
     List<String> happyPeopleList = [];
     List<String> sadPeopleList = [];
+    List<String> happyActivityList = [];
+    List<String> sadActivityList = [];
     List<String> infogramModelItemsHappy = [];
     List<String> infogramModelItemsSad = [];
+    List<String> infogramModelItemsHappyActivity = [];
+    List<String> infogramModelItemsSadActivity = [];
 
     var mapOfSad = {};
     var mapOfHappy = {};
-
+    var mapOfHappyActivitys = {};
+    var mapOfSadActivitys = {};
 
     for(var item in recordedMoodModelList){
       for(var item2 in item.moodList) {
         if('assets/png/dark/happy.png' == item2.moodImgPath){
           happyPeopleList.addAll(item2.peoplesWith);
+          happyActivityList.add(item2.activity);
         }
         else if('assets/png/dark/sad.png' == item2.moodImgPath){
           sadPeopleList.addAll(item2.peoplesWith);
+          sadActivityList.add(item2.activity);
         }
       }
     }
@@ -121,30 +150,68 @@ class SharedPref{
       }
     }
 
-    for(int i = 0; i < 3 ; i++){
-      if(mapOfHappy.length >= (i + 1)) {
-        infogramModelItemsHappy.add(mapOfHappy.keys.elementAt(i));
-      }
-      if(mapOfSad.length >= i + 1){
-        infogramModelItemsSad.add(mapOfSad.keys.elementAt(i));
+    for (var element in happyActivityList) {
+      if(!mapOfHappyActivitys.containsKey(element)) {
+        mapOfHappyActivitys[element] = 1;
+      } else {
+        mapOfHappyActivitys[element] += 1;
       }
     }
 
-    if(infogramModelItemsSad.isNotEmpty && infogramModelItemsHappy.isNotEmpty){
-      return [
-        InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy),
-        InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad),
-      ];
+    for (var element in sadActivityList) {
+      if(!mapOfSadActivitys.containsKey(element)) {
+        mapOfSadActivitys[element] = 1;
+      } else {
+        mapOfSadActivitys[element] += 1;
+      }
     }
-    else if (infogramModelItemsSad.isNotEmpty) {
-      return [InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad)];
+
+    for(int i = 0; i < 3 ; i++){
+      if(mapOfHappy.length >= (i + 1)) {
+        infogramModelItemsHappy.add('${mapOfHappy.keys.elementAt(i)}, ${mapOfHappy.values.elementAt(i)} times ');
+      }
+      if(mapOfSad.length >= i + 1){
+        infogramModelItemsSad.add('${mapOfSad.keys.elementAt(i)}, ${mapOfSad.values.elementAt(i)} times ');
+      }
+      if(mapOfHappyActivitys.length >= i + 1){
+        infogramModelItemsHappyActivity.add('${mapOfHappyActivitys.keys.elementAt(i)}, ${mapOfHappyActivitys.values.elementAt(i)} times ');
+      }
+      if(mapOfSadActivitys.length >= i + 1){
+        infogramModelItemsSadActivity.add('${mapOfSadActivitys.keys.elementAt(i)}, ${mapOfSadActivitys.values.elementAt(i)} times ');
+      }
     }
-    else if (infogramModelItemsHappy.isEmpty) {
-      return [InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy)];
+
+    List<InfogramModel> finalList = List.empty(growable: true);
+    //if(infogramModelItemsSad.isNotEmpty && infogramModelItemsHappy.isNotEmpty){
+    //  return [
+    //    InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy),
+    //    InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad),
+    //    InfogramModel(title: 'Activitys make you happy', items: infogramModelItemsSad),
+    //    InfogramModel(title: 'Activitys make you sad', items: infogramModelItemsSad),
+    //  ];
+    //}
+    //else if (infogramModelItemsSad.isNotEmpty) {
+    //  return [InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad)];
+    //}
+    //else if (infogramModelItemsHappy.isEmpty) {
+    //  return [InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy)];
+    //}
+    //else {
+    //  return [];
+    //}
+    if(infogramModelItemsHappy.isNotEmpty){
+      finalList.add(InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy));
     }
-    else {
-      return [];
+    if(infogramModelItemsSad.isNotEmpty){
+      finalList.add(InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad));
     }
+    if(infogramModelItemsHappyActivity.isNotEmpty){
+      finalList.add(InfogramModel(title: 'Activitys make you happy', items: infogramModelItemsHappyActivity));
+    }
+    if(infogramModelItemsSadActivity.isNotEmpty){
+      finalList.add(InfogramModel(title: 'Activitys make you sad', items: infogramModelItemsSadActivity));
+    }
+    return finalList;
   }
 
   //This method getting activity and people list in storage saved by user. 
@@ -161,4 +228,5 @@ class SharedPref{
 enum SharedPrefKeys {
   activity_list,
   people_list,
+  recorded_list,
 }

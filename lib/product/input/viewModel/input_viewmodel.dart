@@ -5,6 +5,7 @@ import 'package:flutter_mood_tracker/product/input/view/widgets.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/mood_model.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
+import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:mobx/mobx.dart';
 part 'input_viewmodel.g.dart';
@@ -86,7 +87,7 @@ abstract class _InputViewModelBase with Store {
     ),
   ];
 
-  void saveButtonClicked() {
+  void saveButtonClicked(BuildContext context) {
     
     //Create moodModel
     MoodModel moodModel = MoodModel(
@@ -104,7 +105,7 @@ abstract class _InputViewModelBase with Store {
       ),
       moodList: [moodModel]
     );
-    
+    Navigator.of(context).pushNamedAndRemoveUntil(Routes.home.name, (route) => false);
     //Send to sharedPref and TODO: save it in storage(in addMoodToRecordedDate() method).
     sharedPref.addMoodToRecordedDate(recordedMoodModel);
     updateList();
@@ -209,4 +210,7 @@ abstract class _InputViewModelBase with Store {
     return list;
   }
 
+  void pageCloseButtonPressed(BuildContext context){
+    Navigator.of(context).pop();
+  }
 }

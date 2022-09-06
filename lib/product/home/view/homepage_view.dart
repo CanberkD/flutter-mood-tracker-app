@@ -34,7 +34,7 @@ class _HomePageViewState extends State<HomePageView> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value(), bottom: PaddingSizes.mainColumnVerticalPadding.value()),
-                child: TodayBar(model: _model),
+                child: TodayBar(model: _model, context: context),
               ),
               const SubTitle(text: ProjectText.homepageSubtitleInfogram),
               _model.infogramList.isNotEmpty ? Infogram(model: _model,) : const InformationText(text: ProjectText.informationEmptyInfogram),

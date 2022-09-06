@@ -26,8 +26,8 @@ class ProjectText {
   static const String saturday = "Saturday";
   static const String sunday = "Sunday";
 
-  static const String informationEmptyInfogram =  "You have not info about your mood's because you never select peoples with you.";
-  static const String informationEmptyRecorded = 'You have never input your mood.';
+  static const String informationEmptyInfogram =  "You have not info about your moods because you have not input mood or mood information.";
+  static const String informationEmptyRecorded = 'Uh, i think you are newcomer. Input your first mood with information then we create your recorded list.';
 
   static const String inputpageTitleChoose = "Choose your mood.";
   static const String inputpageMoodSelectionTitle = "How do you feel?";

@@ -17,7 +17,7 @@ class _InputViewState extends State<InputView> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const ButtonClose(),
+            ButtonClose(model: _model),
             const MainHeader(),
             const MoodSelectionTitle(),
             MoodSelectionWidget(model: _model),

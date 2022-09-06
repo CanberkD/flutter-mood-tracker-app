@@ -1,4 +1,9 @@
 
+import 'package:json_annotation/json_annotation.dart';
+
+part 'mood_model.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class MoodModel {
   late final String moodImgPath;
   late final String hour;
@@ -11,4 +16,13 @@ class MoodModel {
     required this.activity, 
     required this.peoplesWith
     });
+
+  factory MoodModel.fromJson(Map<String, dynamic> json) => _$MoodModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MoodModelToJson(this);
+
+  @override
+  String toString() {
+    return ('$moodImgPath, $hour, $activity, $peoplesWith');
+  }
 }

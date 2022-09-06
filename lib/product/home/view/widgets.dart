@@ -3,6 +3,7 @@ import 'package:flutter_mood_tracker/product/components/text/header_text.dart';
 import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
 import 'package:flutter_mood_tracker/product/consts/text.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
+import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 
 import '../../components/button/icon_button.dart';
 import '../../consts/size.dart';
@@ -35,10 +36,11 @@ class HelloBar extends StatelessWidget {
 class TodayBar extends StatelessWidget {
   const TodayBar({
     Key? key,
-    required HomePageViewModel model,
+    required HomePageViewModel model, required this.context,
   }) : _model = model, super(key: key);
 
   final HomePageViewModel _model;
+  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +74,7 @@ class TodayBar extends StatelessWidget {
                 width: HomePageViewConsts.todayCardSize,
                 height: HomePageViewConsts.todayCardSize,
                 child: ElevatedButton(onPressed: () {
-                
+                  Navigator.of(context).pushNamed(Routes.addMood.name);
                 }, child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -186,7 +188,8 @@ class RecordedList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: _model.recordedList.length,
-      shrinkWrap: true,
+      shrinkWrap: true, 
+      reverse: true, //For today to earlier list.
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index1) {
       return Padding(
