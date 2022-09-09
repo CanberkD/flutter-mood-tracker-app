@@ -59,10 +59,6 @@ class _ToggleButtonState extends State<ToggleButton> {
     widget.onpressed.call(_isSelected);
   }
 
-  void _onTap() {
-    _isSelectedChange();
-  }
-
   void _isSelectedChange() {
     setState(() {
       _isSelected = !_isSelected;

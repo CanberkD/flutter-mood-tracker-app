@@ -16,37 +16,11 @@ class SharedPrefInstance {
 }
 
 class SharedPref{
+  //RecordedMoodModel list.
   late List<RecordedMoodModel> recordedMoodModelList = List.empty(growable: true);
   SharedPref(){
     recordedMoodModelList = getListFromStorage() ?? [];
   }
-  //List<RecordedMoodModel> recordedMoodModelList =  [
-  //  RecordedMoodModel(moodList: [
-  //    MoodModel(
-  //    activity: 'Work', hour: '12:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone', 'John'], 
-  //    ),
-  //    MoodModel(
-  //    activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone'], 
-  //    ),
-  //  ], date: MoodDateModel(day: 3, month: 9, year: 2022)),
-  //  RecordedMoodModel(moodList: [
-  //    MoodModel(
-  //    activity: 'Work', hour: '10:22', moodImgPath: 'assets/png/dark/happy.png', peoplesWith: ['Alone'], 
-  //    ),
-  //    MoodModel(
-  //    activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Alone', 'Bill', 'Dutch'], 
-  //    ),
-  //  ], date: MoodDateModel(day: 2, month: 9, year: 2022)),
-  //  RecordedMoodModel(moodList: [
-  //    MoodModel(
-  //    activity: 'Work', hour: '10:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Alone'], 
-  //    ),
-  //    MoodModel(
-  //    activity: 'Work', hour: '15:22', moodImgPath: 'assets/png/dark/sad.png', peoplesWith: ['Bill',], 
-  //    ),
-  //  ], date: MoodDateModel(day: 1, month: 9, year: 2022)),
-  //];
-
   void addToRecordedMoodModelList (RecordedMoodModel item) => recordedMoodModelList.add(item);
 
   //This method try to find record of selected date. if do not, return null.
@@ -182,23 +156,7 @@ class SharedPref{
     }
 
     List<InfogramModel> finalList = List.empty(growable: true);
-    //if(infogramModelItemsSad.isNotEmpty && infogramModelItemsHappy.isNotEmpty){
-    //  return [
-    //    InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy),
-    //    InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad),
-    //    InfogramModel(title: 'Activitys make you happy', items: infogramModelItemsSad),
-    //    InfogramModel(title: 'Activitys make you sad', items: infogramModelItemsSad),
-    //  ];
-    //}
-    //else if (infogramModelItemsSad.isNotEmpty) {
-    //  return [InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad)];
-    //}
-    //else if (infogramModelItemsHappy.isEmpty) {
-    //  return [InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy)];
-    //}
-    //else {
-    //  return [];
-    //}
+
     if(infogramModelItemsHappy.isNotEmpty){
       finalList.add(InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy));
     }

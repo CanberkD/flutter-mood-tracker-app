@@ -25,25 +25,29 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value()),
-      child: SizedBox(
-        width: ButtonSize.simpleButtonWidth.value(),
-        child: ElevatedButton(
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all(ProjectColors.primaryWhite.value()),
-              overlayColor: MaterialStateProperty.resolveWith(
-                (states) {
-                  return states.contains(MaterialState.pressed)
-                      ? ProjectColors.primaryBlue.value().withOpacity(0.2)
-                      : null;
-                },
-              )),
-          onPressed: (){_model.saveButtonClicked(context);},
-          child: Text(ProjectText.inputpageSaveButtonText,
-              style: TextStyle(color: ProjectColors.primaryBlack.value())),
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: PaddingSizes.mainColumnVerticalPadding.value()),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            width: ButtonSize.simpleButtonWidth.value(),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(ProjectColors.primaryWhite.value()),
+                  overlayColor: MaterialStateProperty.resolveWith(
+                    (states) {
+                      return states.contains(MaterialState.pressed)
+                          ? ProjectColors.primaryBlue.value().withOpacity(0.2)
+                          : null;
+                    },
+                  )),
+              onPressed: (){_model.saveButtonClicked(context);},
+              child: Text(ProjectText.inputpageSaveButtonText,
+                  style: TextStyle(color: ProjectColors.primaryBlack.value())),
+            ),
+          ),
         ),
       ),
     );
@@ -152,7 +156,7 @@ class ButtonClose extends StatelessWidget {
             onPressed: () {model.pageCloseButtonPressed(context);},
             child: Padding(
               padding:
-                  EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()),
+                  EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()*2),
               child: Image.asset(PngPaths(themeInfo: ThemeInfo.dark).close),
             )),
       ),
@@ -176,7 +180,7 @@ class PeopleSelection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: InputViewConsts.activitySelectionButtonHeight * 1.2,
+      height: InputViewConsts.activitySelectionButtonHeight * 1.5,
       child: Observer(builder: (_) {
         return ListView.builder(
           controller: _model.peopleScrollController,
@@ -266,7 +270,7 @@ class ActivitySelectionGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: InputViewConsts.activitySelectionButtonHeight * 1.2,
+      height: InputViewConsts.activitySelectionButtonHeight * 1.5,
       child: Observer(builder: (_) {
         return ListView.builder(
           controller: _model.activityScrollController,
@@ -370,28 +374,39 @@ class AddItemWidget extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      TextField(
-                        decoration: InputDecoration(
-                            hintText: isActivity ? 'Activity' : 'Name',
-                            counterText: ''),
-                        maxLength: 10,
-                        controller: _controller,
-                      ),
-                      SizedBox(
-                        width: ButtonSize.simpleButtonWidth.value(),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              if (_controller.text.length >= 3) {
-                                onAddPressed.call(_controller.text);
-                              }
-                            },
-                            child: const Text('Add')),
-                      )
-                    ]),
+                child: Form(
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextFormField(
+                          onFieldSubmitted: (value) {
+                            if (_controller.text.length >= 3) {
+                                  onAddPressed.call(_controller.text);
+                                }
+                          },
+                          textCapitalization: TextCapitalization.words,
+                          textInputAction: TextInputAction.done,
+                          decoration: InputDecoration(
+                              hintText: isActivity ? 'Activity' : 'Name',
+                              counterText: ''),
+                          maxLength: 12,
+                          controller: _controller,
+                          autofocus: true,
+
+                        ),
+                        SizedBox(
+                          width: ButtonSize.simpleButtonWidth.value(),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                if (_controller.text.length >= 3) {
+                                  onAddPressed.call(_controller.text);
+                                }
+                              },
+                              child: const Text('Add')),
+                        )
+                      ]),
+                ),
               ),
             ),
           ],

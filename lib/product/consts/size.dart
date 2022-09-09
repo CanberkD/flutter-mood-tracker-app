@@ -59,3 +59,13 @@ extension FontWeightsExtension on FontWeights {
     }
   }
 }
+
+enum RoundSizes {showModelMainSize}
+extension RoundSizesExtension on RoundSizes {
+  double value(){
+    switch(this){
+      case RoundSizes.showModelMainSize:
+        return 25.0;
+    }
+  }
+}

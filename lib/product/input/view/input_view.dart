@@ -14,20 +14,26 @@ class _InputViewState extends State<InputView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ButtonClose(model: _model),
-            const MainHeader(),
-            const MoodSelectionTitle(),
-            MoodSelectionWidget(model: _model),
-            const ActivitySelectionTitle(),
-            ActivitySelectionGroup(model: _model),
-            const PeopleSelectionTitle(),
-            PeopleSelection(model: _model),
-            SaveButton(model: _model)
-          ],
-        ),
+      body: CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ButtonClose(model: _model),
+                const MainHeader(),
+                const MoodSelectionTitle(),
+                MoodSelectionWidget(model: _model),
+                const ActivitySelectionTitle(),
+                ActivitySelectionGroup(model: _model),
+                const PeopleSelectionTitle(),
+                PeopleSelection(model: _model),
+                SaveButton(model: _model)
+              ],
+            ),
+          )
+        ],
+        
       ),
     );
   }

@@ -22,6 +22,7 @@ class PngPaths{
   String get theme => "$_basePngPath/theme.png";
   String get world => "$_basePngPath/world.png";
   String get close => "$_basePngPath/close.png";
+  String get filterClear => "$_basePngPath/filter_clear.png";
 }
 
 enum ThemeInfo {light, dark}

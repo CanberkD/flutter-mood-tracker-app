@@ -46,6 +46,9 @@ dependencies:
   #json
   json_annotation: ^4.6.0
 
+  #style
+  dropdown_button2: ^1.7.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

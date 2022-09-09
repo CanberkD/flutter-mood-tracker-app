@@ -1,4 +1,5 @@
 
+import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
@@ -18,27 +19,68 @@ abstract class _HomePageViewModelBase with Store {
   late final ProjectDateTime _dateTime;
   late final PngPaths pngPaths;
   
+  @observable
+  int dayIndex = ProjectDateTime().day;
+  @observable
+  int monthIndex = ProjectDateTime().month;
+  @observable
+  int yearIndex = ProjectDateTime().year;
+ 
+  late List<DropdownMenuItem<int>> dropdownDayList = List.empty(growable: true);
+  late List<DropdownMenuItem<int>> dropdownMonthList = List.empty(growable: true);
+  late List<DropdownMenuItem<int>> dropdownYearList = List.empty(growable: true);
+  
+
   _HomePageViewModelBase(){
 
     sharedPref = SharedPref();
-    List<dynamic> recordedList = sharedPref.getListFromStorage() ?? [];
 
     _dateTime = ProjectDateTime(dateTime: DateTime.now());
     pngPaths = PngPaths(themeInfo: ThemeInfo.dark);
-  
+
+    for(int i = 0; i<31; i++){
+      dropdownDayList.add(DropdownMenuItem(value: i+1,child: Text((i+1).toString()),));
+      if(i < 12){
+        dropdownMonthList.add(DropdownMenuItem(value: i+1,child: Text((i+1).toString()),));
+      }
+    }
+    for(int i = 2021; i<= 2030; i++){
+      dropdownYearList.add(DropdownMenuItem(value: i+1,child: Text((i+1).toString()),));
+    }
   }
-  
+
   //Getting saved mood of today. 
   late List<MoodModel> todayList = sharedPref.makeToDayList();  
   //Getting infogram item list calculated in sharedPref.
   late List<InfogramModel> infogramList = sharedPref.setInfogramModelList();
   //Getting all recorded list.
-  late List<RecordedMoodModel> recordedList = sharedPref.recordedMoodModelList;
+  @observable
+  late ObservableList<RecordedMoodModel> recordedList = ObservableList.of(sharedPref.recordedMoodModelList);
 
    
   //Getter method for date string under the Hello text.
   String get helloBarDateStr => _dateTime.formattedDate;
 
+void filterRecordedList(BuildContext context){
+    MoodDateModel selectedDate = MoodDateModel(
+        day: dayIndex, month: monthIndex, year: yearIndex);
+    ObservableList<RecordedMoodModel> filteredList =
+        ObservableList.of(List.empty(growable: true));
 
+    for (var item in sharedPref.recordedMoodModelList) {
+      if (item.date.toString() == selectedDate.toString()) {
+        filteredList.add(item);
+      }
+    }
+    recordedList = filteredList;
+    Navigator.pop(context);
+  }
+
+void clearFilter(BuildContext context){
+  recordedList = ObservableList.of(sharedPref.recordedMoodModelList);
+  dayIndex = ProjectDateTime().day;
+  monthIndex = ProjectDateTime().month;
+  yearIndex = ProjectDateTime().year;
+}
 
 }

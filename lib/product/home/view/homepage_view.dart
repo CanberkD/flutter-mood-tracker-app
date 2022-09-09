@@ -22,26 +22,32 @@ class _HomePageViewState extends State<HomePageView> {
       body: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: ListView(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: PaddingSizes.mainColumHorizontalPadding.value(), top: PaddingSizes.mainColumHorizontalPadding.value()),
-                child: settingButton(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()),
-                child: HelloBar(model: _model),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value(), bottom: PaddingSizes.mainColumnVerticalPadding.value()),
-                child: TodayBar(model: _model, context: context),
-              ),
-              const SubTitle(text: ProjectText.homepageSubtitleInfogram),
-              _model.infogramList.isNotEmpty ? Infogram(model: _model,) : const InformationText(text: ProjectText.informationEmptyInfogram),
-              RecordedTopBar(model: _model),
-              _model.recordedList.isNotEmpty ? RecordedList(model: _model) : const InformationText(text: ProjectText.informationEmptyRecorded),
-            ],
-          ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: PaddingSizes.mainColumHorizontalPadding.value(), top: PaddingSizes.mainColumnVerticalPadding.value()),
+                  child: settingButton(),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()),
+                  child: HelloBar(model: _model),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value(), bottom: PaddingSizes.mainColumnVerticalPadding.value()),
+                  child: TodayBar(model: _model, context: context),
+                ),
+                const SubTitle(text: ProjectText.homepageSubtitleInfogram),
+                _model.infogramList.isNotEmpty ? Infogram(model: _model,) : const InformationText(text: ProjectText.informationEmptyInfogram),
+                Padding(
+                  padding: EdgeInsets.zero,
+                  child: RecordedTopBar(model: _model),
+                ),
+                _model.recordedList.isNotEmpty ? RecordedList(model: _model) : const InformationText(text: ProjectText.informationEmptyRecorded),
+              ],
+            ),
+        ),
         ),
     );
   }
@@ -56,28 +62,12 @@ class _HomePageViewState extends State<HomePageView> {
   }
 }
 
-class InformationText extends StatelessWidget {
-  const InformationText({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: PaddingSizes.mainColumHorizontalPadding.value()) + EdgeInsets.only(top: PaddingSizes.small.value()),
-      child: Text(text),
-    );
-  }
-}
 
 //Constants
 class HomePageViewConsts {
-  static double todayCardIconSize = 32.0;
+  static double todayCardIconSize = 36.0;
   static double todayCardSize = 100;
   static double infogramContainerSize = 130;
-  static double recordedCardHeight = 100;
+  static double recordedCardHeight = 130;
   static double infogramCardWidth = 300;
 }

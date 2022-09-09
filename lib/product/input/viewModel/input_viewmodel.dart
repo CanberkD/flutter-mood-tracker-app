@@ -113,7 +113,7 @@ abstract class _InputViewModelBase with Store {
   @action
   void activityAddButtonClicked(BuildContext context) {
     showModalBottomSheet(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(RoundSizes.showModelMainSize.value()))),
         isScrollControlled: true,
         context: context,
         builder: (context) => AddItemWidget(
@@ -126,6 +126,7 @@ abstract class _InputViewModelBase with Store {
   @action
   void peopleAddButtonClicked(BuildContext context) {
     showModalBottomSheet(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(RoundSizes.showModelMainSize.value()))),
         isScrollControlled: true,
         context: context,
         builder: (context) => AddItemWidget(
@@ -171,7 +172,6 @@ abstract class _InputViewModelBase with Store {
   }
 
   String findActivity(List<bool> boolList, List<String> activityList) {
-    List<String> finalList;
     for (int i = 0; i < boolList.length; i++) {
       if (boolList[i] == true) {
         return activityList[i];
