@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
-import 'package:flutter_mood_tracker/product/input/view/widgets.dart';
+import 'package:flutter_mood_tracker/product/pages/input/view/widgets.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/mood_model.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';

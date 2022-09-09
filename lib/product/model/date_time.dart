@@ -49,4 +49,8 @@ class ProjectDateTime {
     String monthStr = _months[month - 1];
     return '$day $monthStr';
   }
+  String convertStringDateForRecordedDayAll(int day, int month, int year){
+    String monthStr = _months[month - 1];
+    return '$day $monthStr $year';
+  }
 }

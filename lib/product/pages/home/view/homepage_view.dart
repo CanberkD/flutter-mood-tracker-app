@@ -4,7 +4,7 @@ import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart'
 import 'package:flutter_mood_tracker/product/consts/size.dart';
 import 'package:flutter_mood_tracker/product/consts/text.dart';
 import './widgets.dart';
-import 'package:flutter_mood_tracker/product/home/viewmodel/homepage_viewmodel.dart';
+import 'package:flutter_mood_tracker/product/pages/home/viewmodel/homepage_viewmodel.dart';
 
 class HomePageView extends StatefulWidget {
   const HomePageView({Key? key}) : super(key: key);

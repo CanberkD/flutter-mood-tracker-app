@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_mood_tracker/product/home/model/infogram_model.dart';
+import 'package:flutter_mood_tracker/product/pages/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
 import 'package:mobx/mobx.dart';

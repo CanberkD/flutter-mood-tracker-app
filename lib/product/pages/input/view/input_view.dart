@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mood_tracker/product/input/view/widgets.dart';
-import 'package:flutter_mood_tracker/product/input/viewModel/input_viewmodel.dart';
+import 'package:flutter_mood_tracker/product/pages/input/view/widgets.dart';
+import 'package:flutter_mood_tracker/product/pages/input/viewModel/input_viewmodel.dart';
 
 class InputView extends StatefulWidget {
   const InputView({Key? key}) : super(key: key);

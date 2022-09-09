@@ -69,3 +69,14 @@ extension RoundSizesExtension on RoundSizes {
     }
   }
 }
+
+enum ImageSizes {recordedDayListTileMoodImageSize}
+
+extension ImageSizesExtension on ImageSizes {
+  double value(){
+    switch(this){
+      case ImageSizes.recordedDayListTileMoodImageSize:
+        return 64.0;
+    }
+  }
+}

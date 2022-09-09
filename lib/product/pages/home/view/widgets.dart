@@ -9,8 +9,8 @@ import 'package:flutter_mood_tracker/product/consts/text.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 
-import '../../components/button/icon_button.dart';
-import '../../consts/size.dart';
+import '../../../components/button/icon_button.dart';
+import '../../../consts/size.dart';
 import '../viewmodel/homepage_viewmodel.dart';
 import 'homepage_view.dart';
 
@@ -223,7 +223,9 @@ class RecordedList extends StatelessWidget {
               height: HomePageViewConsts.recordedCardHeight,
               child: Card(
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.recordedDay.name, arguments: _model.recordedList[index1]);
+                  },
                   child: Column(children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
