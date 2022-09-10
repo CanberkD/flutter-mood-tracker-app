@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mood_tracker/product/components/button/icon_button.dart';
+import 'package:flutter_mood_tracker/product/components/button/go_back_button.dart';
 import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
 import 'package:flutter_mood_tracker/product/consts/color.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
@@ -19,13 +19,7 @@ class RecordedDayView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(13),
-          child: CircularIconButton(
-            child: Icon(Icons.chevron_left, color: ProjectColors.primaryBlack.value()),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
+        leading: const GoBackIconButton(),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -36,7 +30,7 @@ class RecordedDayView extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()),
+              padding: EdgeInsets.symmetric(horizontal: PaddingSizes.mainColumHorizontalPadding.value()),
               child: ListView.builder(
                 itemCount: recordedMoodModel.moodList.length,
                 itemBuilder: (context, index) {
@@ -50,6 +44,7 @@ class RecordedDayView extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(right: PaddingSizes.mainColumHorizontalPadding.value()),
                               child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SubTitle(text: recordedMoodModel.moodList[index].hour, padding: EdgeInsets.zero),
                                     Align(
@@ -70,14 +65,14 @@ class RecordedDayView extends StatelessWidget {
                                   Row(
                                     children: [
                                       Expanded(child: Text('Activity: ', style: Theme.of(context).textTheme.headline6,)),
-                                      Expanded(child: Text(recordedMoodModel.moodList[index].activity, style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.w300),)),
+                                      Expanded(child: Text(recordedMoodModel.moodList[index].activity, style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.w300, fontSize: 16),)),
                                     ],
                                   ),
                                   const Divider(),
                                   Row(
                                     children: [
                                       Expanded(child: Text('Peoples With: ', style: Theme.of(context).textTheme.headline6)),
-                                      Expanded(child: Text(recordedMoodModel.moodList[index].peoplesWith.toString().replaceAll("]","").replaceAll("[",""), style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.w300,)))
+                                      Expanded(child: Text(recordedMoodModel.moodList[index].peoplesWith.toString().replaceAll("]","").replaceAll("[",""), style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.w300, fontSize: 16)))
                                     ],
                                   )
                                 ],

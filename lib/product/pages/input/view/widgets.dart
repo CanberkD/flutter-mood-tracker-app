@@ -149,17 +149,14 @@ class ButtonClose extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
           right: PaddingSizes.mainColumHorizontalPadding.value(),
-          top: PaddingSizes.mainColumnVerticalPadding.value()),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: CircularIconButton(
-            onPressed: () {model.pageCloseButtonPressed(context);},
-            child: Padding(
-              padding:
-                  EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()*2),
-              child: Image.asset(PngPaths(themeInfo: ThemeInfo.dark).close),
-            )),
-      ),
+      ),  
+      child: CircularIconButton(
+          onPressed: () {model.pageCloseButtonPressed(context);},
+          child: Padding(
+            padding:
+                EdgeInsets.all(PaddingSizes.iconButtonChildPadding.value()*2),
+            child: Image.asset(PngPaths(themeInfo: ThemeInfo.dark).close),
+          )),
     );
   }
 }

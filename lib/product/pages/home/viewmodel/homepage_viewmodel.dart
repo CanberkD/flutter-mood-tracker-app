@@ -59,8 +59,9 @@ abstract class _HomePageViewModelBase with Store {
    
   //Getter method for date string under the Hello text.
   String get helloBarDateStr => _dateTime.formattedDate;
-
-void filterRecordedList(BuildContext context){
+  
+  //Filter recorded list
+  void filterRecordedList(BuildContext context){
     MoodDateModel selectedDate = MoodDateModel(
         day: dayIndex, month: monthIndex, year: yearIndex);
     ObservableList<RecordedMoodModel> filteredList =
@@ -75,7 +76,8 @@ void filterRecordedList(BuildContext context){
     Navigator.pop(context);
   }
 
-void clearFilter(BuildContext context){
+  //Clear filter
+  void clearFilter(BuildContext context){
   recordedList = ObservableList.of(sharedPref.recordedMoodModelList);
   dayIndex = ProjectDateTime().day;
   monthIndex = ProjectDateTime().month;

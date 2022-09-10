@@ -33,3 +33,20 @@ class CircularIconButton extends StatelessWidget {
       );
   }
 }
+
+class CircularIconButtonLeading extends StatelessWidget {
+  const CircularIconButtonLeading({
+    Key? key,
+    required this.iconButton,
+  }) : super(key: key);
+
+  final CircularIconButton iconButton;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+          padding: const EdgeInsets.all(13),
+          child: iconButton,
+        );
+  }
+}
+

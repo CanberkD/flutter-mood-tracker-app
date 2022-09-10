@@ -176,15 +176,17 @@ class Infogram extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: _model.infogramList[index1].getItems.length,
-                      itemBuilder: (context, index) {
-                        return Center(
-                            child: Text(
-                                _model.infogramList[index1].getItems[index]));
-                      },
+                    child: Center(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _model.infogramList[index1].getItems.length,
+                        itemBuilder: (context, index) {
+                          return Center(
+                              child: Text(
+                                  _model.infogramList[index1].getItems[index]));
+                        },
+                      ),
                     ),
                   )
                 ]),

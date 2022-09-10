@@ -106,7 +106,7 @@ abstract class _InputViewModelBase with Store {
       moodList: [moodModel]
     );
     Navigator.of(context).pushNamedAndRemoveUntil(Routes.home.name, (route) => false);
-    //Send to sharedPref and TODO: save it in storage(in addMoodToRecordedDate() method).
+
     sharedPref.addMoodToRecordedDate(recordedMoodModel);
     updateList();
   }

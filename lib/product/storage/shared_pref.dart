@@ -142,16 +142,16 @@ class SharedPref{
 
     for(int i = 0; i < 3 ; i++){
       if(mapOfHappy.length >= (i + 1)) {
-        infogramModelItemsHappy.add('${mapOfHappy.keys.elementAt(i)}, ${mapOfHappy.values.elementAt(i)} times ');
+        infogramModelItemsHappy.add('${mapOfHappy.keys.elementAt(i)}: ${mapOfHappy.values.elementAt(i)} times ');
       }
       if(mapOfSad.length >= i + 1){
-        infogramModelItemsSad.add('${mapOfSad.keys.elementAt(i)}, ${mapOfSad.values.elementAt(i)} times ');
+        infogramModelItemsSad.add('${mapOfSad.keys.elementAt(i)}: ${mapOfSad.values.elementAt(i)} times ');
       }
       if(mapOfHappyActivitys.length >= i + 1){
-        infogramModelItemsHappyActivity.add('${mapOfHappyActivitys.keys.elementAt(i)}, ${mapOfHappyActivitys.values.elementAt(i)} times ');
+        infogramModelItemsHappyActivity.add('${mapOfHappyActivitys.keys.elementAt(i)}: ${mapOfHappyActivitys.values.elementAt(i)} times ');
       }
       if(mapOfSadActivitys.length >= i + 1){
-        infogramModelItemsSadActivity.add('${mapOfSadActivitys.keys.elementAt(i)}, ${mapOfSadActivitys.values.elementAt(i)} times ');
+        infogramModelItemsSadActivity.add('${mapOfSadActivitys.keys.elementAt(i)}: ${mapOfSadActivitys.values.elementAt(i)} times ');
       }
     }
 
@@ -181,10 +181,21 @@ class SharedPref{
     SharedPrefInstance.instance.setStringList(key.name, list);
   }
 
+  void saveInt(int value, SharedPrefKeys key){
+    SharedPrefInstance.instance.setInt(key.name, value);
+  }
+
+  int getInt(SharedPrefKeys key){
+    return SharedPrefInstance.instance.getInt(key.name) ?? 1;
+  }
 }
 
 enum SharedPrefKeys {
   activity_list,
   people_list,
   recorded_list,
+  wakeup_hour,
+  wakeup_minute,
+  is_notification_on,
+  is_notification_hourly,
 }

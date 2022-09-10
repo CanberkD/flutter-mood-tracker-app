@@ -14,13 +14,18 @@ class _InputViewState extends State<InputView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: const SizedBox.shrink(),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [ButtonClose(model: _model)]
+      ),
       body: CustomScrollView(
         slivers: [
           SliverFillRemaining(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ButtonClose(model: _model),
                 const MainHeader(),
                 const MoodSelectionTitle(),
                 MoodSelectionWidget(model: _model),
