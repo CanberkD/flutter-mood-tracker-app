@@ -15,8 +15,15 @@ class HomePageView extends StatefulWidget {
 
 class _HomePageViewState extends State<HomePageView> {
 
-  final HomePageViewModel _model = HomePageViewModel();               
+  final HomePageViewModel _model = HomePageViewModel();           
   
+  @override
+  void initState() {
+    super.initState();
+    _model.notificationSetup(context);
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +60,7 @@ class _HomePageViewState extends State<HomePageView> {
         ),
         ),
     );
+
   }
 
   Padding settingButton() {

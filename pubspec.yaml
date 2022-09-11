@@ -49,12 +49,9 @@ dependencies:
   #pickeer
   dropdown_button2: ^1.7.2
   time_picker_sheet: ^0.0.2+1
-  flutter_switch: ^0.3.2
 
   #notification
-  flutter_local_notifications: ^9.9.1
-  timezone: ^0.8.0
-  rxdart: ^0.27.5
+  awesome_notifications: ^0.6.21
 
 dev_dependencies:
   flutter_test:

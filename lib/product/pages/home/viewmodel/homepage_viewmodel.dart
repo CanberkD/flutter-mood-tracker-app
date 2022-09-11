@@ -1,12 +1,15 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/pages/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/mood_model.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
+import 'package:flutter_mood_tracker/product/service/awesome_notifications_service.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:mobx/mobx.dart';
+
 
 
 part 'homepage_viewmodel.g.dart';
@@ -29,9 +32,8 @@ abstract class _HomePageViewModelBase with Store {
   late List<DropdownMenuItem<int>> dropdownMonthList = List.empty(growable: true);
   late List<DropdownMenuItem<int>> dropdownYearList = List.empty(growable: true);
   
-
   _HomePageViewModelBase(){
-
+  
     sharedPref = SharedPref();
 
     _dateTime = ProjectDateTime(dateTime: DateTime.now());
@@ -47,6 +49,7 @@ abstract class _HomePageViewModelBase with Store {
       dropdownYearList.add(DropdownMenuItem(value: i+1,child: Text((i+1).toString()),));
     }
   }
+
 
   //Getting saved mood of today. 
   late List<MoodModel> todayList = sharedPref.makeToDayList();  
@@ -82,6 +85,20 @@ abstract class _HomePageViewModelBase with Store {
   dayIndex = ProjectDateTime().day;
   monthIndex = ProjectDateTime().month;
   yearIndex = ProjectDateTime().year;
-}
+  }
+
+  Future<void> notificationSetup(BuildContext context) async {
+    AwesomeNotificationService notificationService = AwesomeNotificationService();
+    notificationService.awesomeNotificationsPermissionCheck(context);
+    notificationService.awesomeNotificationAddMoodListener(context, ChannelIds.moodReminder);
+    notificationService.scheduledNotification(
+      ChannelIds.moodReminder, 
+      ChannelKeys.moodReminder, 
+      DateTime.now().hour, DateTime.now().minute,
+    );
+  }
+  
+
+  
 
 }

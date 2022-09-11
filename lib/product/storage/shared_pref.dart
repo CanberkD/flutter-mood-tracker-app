@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_mood_tracker/product/pages/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
+import 'package:flutter_mood_tracker/product/pages/settings/model/settings_model.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +24,7 @@ class SharedPref{
   }
   void addToRecordedMoodModelList (RecordedMoodModel item) => recordedMoodModelList.add(item);
 
+  
   //This method try to find record of selected date. if do not, return null.
   RecordedMoodModel? getSelectedDateRecorded(MoodDateModel moodDate){
     for(var item in recordedMoodModelList){
@@ -185,17 +187,48 @@ class SharedPref{
     SharedPrefInstance.instance.setInt(key.name, value);
   }
 
-  int getInt(SharedPrefKeys key){
-    return SharedPrefInstance.instance.getInt(key.name) ?? 1;
+  int? getInt(SharedPrefKeys key){
+    return SharedPrefInstance.instance.getInt(key.name);
   }
+
+  String? getString(SharedPrefKeys key){
+    return SharedPrefInstance.instance.getString(key.name);
+  }
+
+  Future<bool> setString(SharedPrefKeys key, String item) async {
+    return await SharedPrefInstance.instance.setString(key.name, item);
+  }
+
+  SettingsModel getSavedSettingsModel(){
+    final SharedPref sharedPref = SharedPref();
+      final String? itemString = sharedPref.getString(SharedPrefKeys.settings_model);
+      if(itemString != null){
+        final json = jsonDecode(itemString);
+        SettingsModel savedSettingsModel = SettingsModel.fromJson(json);
+        return savedSettingsModel;
+      }
+      return SettingsModel(
+        wakeUpHour: 10, 
+        wakeUpMinute: 0, 
+        sleepHour: 23, 
+        sleepMinute: 30, 
+        isNotificationOn: true, 
+        notificationCountInADay: 5, 
+        language: 'English', 
+        isThemeLight: true
+      );
+  } 
+
+  void saveSettingsModel(SettingsModel item){
+    SharedPref sharedPref = SharedPref();
+    sharedPref.setString(SharedPrefKeys.settings_model,  jsonEncode(item.toJson()));
+  }
+
 }
 
 enum SharedPrefKeys {
   activity_list,
   people_list,
   recorded_list,
-  wakeup_hour,
-  wakeup_minute,
-  is_notification_on,
-  is_notification_hourly,
+  settings_model
 }

@@ -10,7 +10,7 @@ class NavigationRoutes {
         Routes.home.name : (context) => const HomePageView(),
         Routes.addMood.name : (context) => const InputView(),
         Routes.recordedDay.name : (context) => const RecordedDayView(),
-        Routes.settings.name : (context) => const SettingsView(), 
+        Routes.settings.name : (context) => SettingsView(), 
   };
 }
 
