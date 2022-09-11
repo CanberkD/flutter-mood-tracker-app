@@ -6,7 +6,6 @@ import 'package:flutter_mood_tracker/product/pages/home/model/infogram_model.dar
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/mood_model.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
-import 'package:flutter_mood_tracker/product/service/awesome_notifications_service.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:mobx/mobx.dart';
 
@@ -88,14 +87,14 @@ abstract class _HomePageViewModelBase with Store {
   }
 
   Future<void> notificationSetup(BuildContext context) async {
-    AwesomeNotificationService notificationService = AwesomeNotificationService();
-    notificationService.awesomeNotificationsPermissionCheck(context);
-    notificationService.awesomeNotificationAddMoodListener(context, ChannelIds.moodReminder);
-    notificationService.scheduledNotification(
-      ChannelIds.moodReminder, 
-      ChannelKeys.moodReminder, 
-      DateTime.now().hour, DateTime.now().minute,
-    );
+    //AwesomeNotificationService notificationService = AwesomeNotificationService();
+    //notificationService.awesomeNotificationsPermissionCheck(context);
+    //notificationService.awesomeNotificationAddMoodListener(context, ChannelIds.moodReminder);
+    //notificationService.scheduledNotification(
+    //  ChannelIds.moodReminder, 
+    //  ChannelKeys.moodReminder, 
+    //  DateTime.now().hour, DateTime.now().minute,
+    //);
   }
   
 

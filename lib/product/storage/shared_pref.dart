@@ -11,7 +11,7 @@ import '../model/mood_model.dart';
 
 class SharedPrefInstance {
   //SharedPreference instance singleton.
-  static late final SharedPreferences instance;
+  static late SharedPreferences instance;
 
   static Future<SharedPreferences> init() async => instance = await SharedPreferences.getInstance();
 }

@@ -11,17 +11,18 @@ class HomePageView extends StatefulWidget {
   const HomePageView({Key? key}) : super(key: key);
   @override
   State<HomePageView> createState() => _HomePageViewState();
+  
 }
 
 class _HomePageViewState extends State<HomePageView> {
 
-  final HomePageViewModel _model = HomePageViewModel();           
-  
+  final HomePageViewModel _model = HomePageViewModel();  
+           
   @override
   void initState() {
     super.initState();
     _model.notificationSetup(context);
-    
+        
   }
 
   @override

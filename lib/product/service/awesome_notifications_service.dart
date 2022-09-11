@@ -30,6 +30,18 @@ class AwesomeNotificationService {
     );
   }
 
+    Future<void> simpleNotificationForReminder() async {
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+          wakeUpScreen: false,
+          id: ChannelIds.notificationOn.index,
+          channelKey: ChannelKeys.notificationOn.name,
+          title: 'How do you feel?',
+          body: 'Save your feels for track mood changes in your day.ALARM',
+          notificationLayout: NotificationLayout.BigText),
+    );
+  }
+
   //Scheduled notification creator.
   Future<void> scheduledNotification(ChannelIds id, ChannelKeys key, int hour, int minute) async { 
 
@@ -72,7 +84,7 @@ class AwesomeNotificationService {
       }
     });
 
-  }
+}
 
   void setNextNotification(){
     SharedPref sharedPref = SharedPref();
