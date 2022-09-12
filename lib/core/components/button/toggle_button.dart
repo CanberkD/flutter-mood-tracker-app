@@ -14,6 +14,7 @@ class ToggleButton extends StatefulWidget {
     double? width,
     double? heigth,
     double? borderRadius,
+    bool? isShadowVisible,
   })  : _notSelectedColor = notSelectedColor,
         _selectedColor = selectedColor,
         _child = notSelectedChild,
@@ -23,6 +24,7 @@ class ToggleButton extends StatefulWidget {
         _height = heigth ?? 100,
         _borderRadius = borderRadius ?? 10.0,
         _borderColor = borderColor ?? Colors.black12,
+        _isShadowVisible = isShadowVisible ?? true,
         super(key: key);
 
   final void Function(bool isSelected) onpressed;
@@ -35,6 +37,7 @@ class ToggleButton extends StatefulWidget {
   final Color _notSelectedColor;
   final double _borderRadius;
   final Color _borderColor;
+  final bool _isShadowVisible;
 
   @override
   State<ToggleButton> createState() => _ToggleButtonState();
@@ -109,9 +112,9 @@ class _ToggleButtonState extends State<ToggleButton> {
                   : widget._notSelectedColor,
               borderRadius: BorderRadiusDirectional.all(
                   Radius.circular(widget._borderRadius)),
-              boxShadow: [
+              boxShadow: widget._isShadowVisible ? [
                 _isSelected ? const BoxShadow() : simpleBoxShadow,
-              ],
+              ] : [],
             ),
             child: FittedBox(
                 fit: BoxFit.fitHeight,

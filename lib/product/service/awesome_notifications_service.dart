@@ -19,7 +19,7 @@ class AwesomeNotificationService {
   }
 
   //Simple notification creator.
-  Future<void> simpleNotification() async {
+  Future<void> simpleNotificationNotificationOn() async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
           wakeUpScreen: false,
@@ -35,10 +35,10 @@ class AwesomeNotificationService {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
           wakeUpScreen: false,
-          id: ChannelIds.notificationOn.index,
-          channelKey: ChannelKeys.notificationOn.name,
+          id: ChannelIds.moodReminder.index,
+          channelKey: ChannelKeys.moodReminder.name,
           title: 'How do you feel?',
-          body: 'Save your feels for track mood changes in your day.ALARM',
+          body: 'Save your feels for track mood changes in your day.',
           notificationLayout: NotificationLayout.BigText),
     );
   }
@@ -62,10 +62,6 @@ void showNotification(){
       intervalHour = intervalMinute ~/ 60;
       intervalMinute = intervalMinute % 60;
     }
-
-    intervalHour = 0;
-    intervalMinute = 1;
-    //TODO: for test, remove later.
 
     if (settingsModel.isNotificationOn) {
       if (dateTime.hour + intervalHour >= settingsModel.wakeUpHour &&
@@ -115,17 +111,18 @@ void showNotification(){
         });
       }
       if(event.id == id.index){
+        //When notification click, first page gonna be mood input page. 
         Navigator.pushNamed(context, Routes.addMood.name);
       }
     });
 
+    //TODO: Check it later for notifications.
     //When notification display, next one schedule now.
-    AwesomeNotifications().displayedStream.listen((event) { 
-      print('displeyed');
-      if(event.id == id.index){
-        setNextNotification();
-      }
-    });
+    //AwesomeNotifications().displayedStream.listen((event) { 
+    //  if(event.id == id.index){
+    //    setNextNotification();
+    //  }
+    //});
 
 }
 

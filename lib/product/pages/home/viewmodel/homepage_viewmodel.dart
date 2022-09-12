@@ -9,8 +9,6 @@ import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:mobx/mobx.dart';
 
-
-
 part 'homepage_viewmodel.g.dart';
 
 class HomePageViewModel = _HomePageViewModelBase with _$HomePageViewModel;
@@ -18,7 +16,8 @@ class HomePageViewModel = _HomePageViewModelBase with _$HomePageViewModel;
 abstract class _HomePageViewModelBase with Store {
   late final SharedPref sharedPref;
   late final ProjectDateTime _dateTime;
-  late final PngPaths pngPaths;
+
+  PngPaths pngPaths = PngPaths(themeInfo: ThemeInfo.dark);
   
   @observable
   int dayIndex = ProjectDateTime().day;
@@ -36,7 +35,6 @@ abstract class _HomePageViewModelBase with Store {
     sharedPref = SharedPref();
 
     _dateTime = ProjectDateTime(dateTime: DateTime.now());
-    pngPaths = PngPaths(themeInfo: ThemeInfo.dark);
 
     for(int i = 0; i<31; i++){
       dropdownDayList.add(DropdownMenuItem(value: i+1,child: Text((i+1).toString()),));
@@ -86,18 +84,12 @@ abstract class _HomePageViewModelBase with Store {
   yearIndex = ProjectDateTime().year;
   }
 
-  Future<void> notificationSetup(BuildContext context) async {
-    //AwesomeNotificationService notificationService = AwesomeNotificationService();
-    //notificationService.awesomeNotificationsPermissionCheck(context);
-    //notificationService.awesomeNotificationAddMoodListener(context, ChannelIds.moodReminder);
-    //notificationService.scheduledNotification(
-    //  ChannelIds.moodReminder, 
-    //  ChannelKeys.moodReminder, 
-    //  DateTime.now().hour, DateTime.now().minute,
-    //);
+  void setPngPaths(BuildContext context){
+    pngPaths = PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ? ThemeInfo.dark: ThemeInfo.light);
   }
-  
 
-  
+  //Future<void> notificationSetup(BuildContext context) async {
+  //  //AwesomeNotificationService notificationService = AwesomeNotificationService();
+  //}
 
 }

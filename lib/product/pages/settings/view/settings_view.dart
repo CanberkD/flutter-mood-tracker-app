@@ -17,6 +17,8 @@ import 'package:flutter_mood_tracker/product/consts/size.dart';
 import 'package:flutter_mood_tracker/product/pages/settings/model/settings_model.dart';
 import 'package:flutter_mood_tracker/product/service/awesome_notifications_service.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
+import 'package:flutter_mood_tracker/product/theme/theme_store.dart';
+import 'package:provider/provider.dart';
 import 'package:time_picker_sheet/widget/sheet.dart';
 import 'package:time_picker_sheet/widget/time_picker.dart';
 
@@ -70,9 +72,10 @@ class SettingsView extends StatelessWidget {
                         nextAlarmSetup();
                       }
                     }, 
-                    imgPath: PngPaths(themeInfo: ThemeInfo.dark).clock,
+                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).clock,
                     text: 'Set waking up time',
                   ),
+                  const Divider(height: 1),
                   SettingsMenuItem(
                     onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () async {
                       final result = await TimePicker.show<DateTime?>(
@@ -91,7 +94,6 @@ class SettingsView extends StatelessWidget {
                         ),
                       );
                       if(result != null){
-                        
                         SharedPref sharedPref = SharedPref();
                         SettingsModel savedSettingsModel = sharedPref.getSavedSettingsModel();
                         savedSettingsModel.setSleepHour = result.hour;
@@ -100,7 +102,7 @@ class SettingsView extends StatelessWidget {
                         nextAlarmSetup();
                       }
                     }, 
-                    imgPath: PngPaths(themeInfo: ThemeInfo.dark).clock,
+                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).clock,
                     text: 'Set sleep time',
                   ),
                   const Divider(height: 1),
@@ -113,20 +115,43 @@ class SettingsView extends StatelessWidget {
                           return NotificationWidget(sharedPref: sharedPref);
                         },);
                     }, 
-                    imgPath: PngPaths(themeInfo: ThemeInfo.dark).notification,
+                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).notification,
                     text: 'Notification',
                   ),
                   const Divider(height: 1),
                   SettingsMenuItem(
                     onPressed: () {}, 
-                    imgPath: PngPaths(themeInfo: ThemeInfo.dark).world,
+                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).world,
                     text: 'Language',
                   ),
                   const Divider(height: 1),
                   SettingsMenuItem(
-                    onPressed: () {}, 
-                    imgPath: PngPaths(themeInfo: ThemeInfo.dark).theme,
+                    onPressed: () {
+                      //Changing theme. User settings in storage, change inside this method.
+                    }, 
+                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).theme,
                     text: 'Theme',
+                    trailingWidget: Padding(
+                      padding: EdgeInsets.symmetric(vertical: SettingsConst.themeToggleButtonPadding),
+                      child: ToggleButton(
+                        width: SettingsConst.themeToggleButtonWidth,
+                        onpressed: (isSelected) {
+                          context.read<ThemeStore>().switchTheme();
+                        }, 
+                        notSelectedColor:ProjectColors.primaryBlack.value(), 
+                        selectedColor:  ProjectColors.primaryWhite.value(), 
+                        notSelectedChild: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Dark'),
+                        ), 
+                        selectedChild: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Light', style: TextStyle(color: ProjectColors.primaryBlack.value()),),
+                        ), 
+                        isShadowVisible: false,
+                        isSelected: sharedPref.getSavedSettingsModel().isThemeLight
+                        ),
+                    ),
                   ),
                 ],
               ),
@@ -170,7 +195,7 @@ class NotificationWidget extends StatelessWidget {
                           settingsModel.setIsNotificationOn = isSelected;
                           sharedPref.saveSettingsModel(settingsModel);
                           if (isSelected) {
-                            notificationService.simpleNotification();
+                            notificationService.simpleNotificationNotificationOn();
                             nextAlarmSetup();
                           }
                           else {
@@ -235,9 +260,10 @@ class SettingsMenuItem extends StatelessWidget {
           leading: SizedBox(
             width: SettingsConst.mainMenuIconSize,
             height: SettingsConst.mainMenuIconSize,
-            child: Image.asset(imgPath)),
+            child: Image.asset(imgPath)
+          ),
           title: Text(text),
-          trailing: trailingWidget ?? Icon(Icons.chevron_right, color: ProjectColors.primaryBlack.value(),),
+          trailing: trailingWidget ?? Icon(Icons.chevron_right, color: Theme.of(context).brightness == Brightness.light ?  ProjectColors.primaryBlack.value() : ProjectColors.primaryWhite.value(),),
         ),
       ),
     );
@@ -265,7 +291,7 @@ class _NotificationCountSelectionState extends State<NotificationCountSelection>
   void initState() {
     super.initState();
     dropDownCounterItemList = List.empty(growable: true);
-    for(int i = 1; i < 75; i++){
+    for(int i = 1; i < SettingsConst.maxNotificationCount; i++){
       dropDownCounterItemList.add(DropdownMenuItem(value: i,child: Text(i.toString()),));
     }
     counterValue = widget.sharedPref.getSavedSettingsModel().notificationCountInADay;
@@ -296,4 +322,7 @@ class SettingsConst {
   static TextStyle timePickerTitleTextStyle =   TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: ProjectColors.primaryBlack.value());
   static double get notificationOnOffButtonWidth => 70.0;
   static double get notificationOnOffButtonHeight => 40.0;
+  static double get themeToggleButtonPadding => 13.0;
+  static double get themeToggleButtonWidth => 70;
+  static int get maxNotificationCount => 10;
 }

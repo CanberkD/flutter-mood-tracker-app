@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mood_tracker/core/components/basic/bottom_sheet_divider.dart';
 import 'package:flutter_mood_tracker/product/components/text/header_text.dart';
 import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
-import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/consts/text.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
@@ -30,7 +29,7 @@ class HelloBar extends StatelessWidget {
       children: [
         const HeaderTextWidget(text: ProjectText.homepageTitleHello),
         Text(model.helloBarDateStr,
-            style: Theme.of(context).textTheme.subtitle1),
+            style: Theme.of(context).textTheme.subtitle2),
       ],
     );
   }
@@ -46,7 +45,7 @@ class TodayBar extends StatelessWidget {
 
   final HomePageViewModel _model;
   final BuildContext context;
-
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -57,8 +56,7 @@ class TodayBar extends StatelessWidget {
           height: HomePageViewConsts.todayCardSize,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: _model.todayList.length +
-                1, //+1 for add mood button end of list.
+            itemCount: _model.todayList.length + 1, //+1 for add mood button end of list.
             itemBuilder: (context, index) {
               return Padding(
                 padding: index == 0
@@ -69,6 +67,7 @@ class TodayBar extends StatelessWidget {
                 child: (index == _model.todayList.length)
                     ? addMoodButton()
                     : TodayMoodsListCard(
+                        model: _model,
                         hour: _model.todayList[index].hour,
                         moodImgPaht: _model.todayList[index].moodImgPath,
                       ),
@@ -105,15 +104,17 @@ class TodayBar extends StatelessWidget {
 class TodayMoodsListCard extends StatelessWidget {
   const TodayMoodsListCard({
     Key? key,
+    required HomePageViewModel model,
     required String moodImgPaht,
     required String hour,
   })  : _hour = hour,
         _moodImgPath = moodImgPaht,
+        _model = model,
         super(key: key);
 
   final String _moodImgPath;
   final String _hour;
-
+  final HomePageViewModel _model;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -124,9 +125,16 @@ class TodayMoodsListCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(
-                width: HomePageViewConsts.todayCardIconSize,
-                height: HomePageViewConsts.todayCardIconSize,
-                child: Image.asset(_moodImgPath)),
+              width: HomePageViewConsts.todayCardIconSize,
+              height: HomePageViewConsts.todayCardIconSize,
+              child: Image.asset(
+                _moodImgPath == _model.pngPaths.happy ? 
+                _model.pngPaths.happy : 
+                _moodImgPath == _model.pngPaths.notr ? 
+                _model.pngPaths.notr : 
+                _model.pngPaths.sad
+              )
+            ),
             Text(_hour)
           ],
         ),
@@ -171,8 +179,8 @@ class Infogram extends StatelessWidget {
                       _model.infogramList[index1].getTitle,
                       style: Theme.of(context)
                           .textTheme
-                          .headline6
-                          ?.copyWith(fontWeight: FontWeights.header.value()),
+                          .subtitle1
+                          ?.copyWith(fontWeight: FontWeights.header.value(), fontSize: 20),
                     ),
                   ),
                   Expanded(
@@ -267,8 +275,13 @@ class RecordedList extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Image.asset(_model.recordedList[index1]
-                                            .moodList[index].moodImgPath),
+                                        Image.asset(
+                                          _model.recordedList[index1].moodList[index].moodImgPath == _model.pngPaths.happy ? 
+                                          _model.pngPaths.happy : 
+                                          _model.recordedList[index1].moodList[index].moodImgPath == _model.pngPaths.notr ? 
+                                          _model.pngPaths.notr : _model.pngPaths.sad
+                                          
+                                          ),
                                         Text(_model.recordedList[index1]
                                             .moodList[index].hour),
                                       ],
@@ -336,9 +349,7 @@ class RecordedTopBar extends StatelessWidget {
                     child: Padding(
                     padding: EdgeInsets.all(
                         PaddingSizes.iconButtonChildPadding.value()),
-                    child: Image.asset(
-                        PngPaths(themeInfo: ThemeInfo.dark)
-                            .filterClear),
+                    child: Image.asset(_model.pngPaths.filterClear),
                   ))
               ],
             ),
@@ -472,7 +483,7 @@ class InformationText extends StatelessWidget {
       padding: EdgeInsets.symmetric(
               horizontal: PaddingSizes.mainColumHorizontalPadding.value()) +
           EdgeInsets.only(top: PaddingSizes.small.value()),
-      child: Text(text),
+      child: Text(text, style: Theme.of(context).textTheme.subtitle2,),
     );
   }
 }
