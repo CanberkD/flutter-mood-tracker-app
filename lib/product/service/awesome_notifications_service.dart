@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
@@ -40,6 +41,48 @@ class AwesomeNotificationService {
           body: 'Save your feels for track mood changes in your day.ALARM',
           notificationLayout: NotificationLayout.BigText),
     );
+  }
+
+void showNotification(){
+    AwesomeNotificationService().simpleNotificationForReminder();
+    nextAlarmSetup();
+}
+
+  void nextAlarmSetup() async {
+    AndroidAlarmManager.cancel(0);
+    const int alarmId = 0;
+    DateTime dateTime = DateTime.now();
+    await SharedPrefInstance.init();
+    SettingsModel settingsModel = SharedPref().getSavedSettingsModel();
+    int countOfNotif = settingsModel.notificationCountInADay;
+    int wakeUpHours = settingsModel.sleepHour - settingsModel.wakeUpHour;
+    int intervalMinute = ((wakeUpHours * 60) ~/ countOfNotif);
+    int intervalHour = 0;
+    if (intervalMinute >= 60) {
+      intervalHour = intervalMinute ~/ 60;
+      intervalMinute = intervalMinute % 60;
+    }
+
+    intervalHour = 0;
+    intervalMinute = 1;
+    //TODO: for test, remove later.
+
+    if (settingsModel.isNotificationOn) {
+      if (dateTime.hour + intervalHour >= settingsModel.wakeUpHour &&
+          dateTime.hour + intervalHour < settingsModel.sleepHour) {
+        AndroidAlarmManager.oneShot(
+            Duration(minutes: (intervalMinute + (intervalHour * 60))),
+            alarmId,
+            showNotification);
+      } else {
+        AndroidAlarmManager.oneShot(
+            Duration(
+                minutes:
+                    ((settingsModel.wakeUpHour - dateTime.hour) * 60) + 60),
+            alarmId,
+            showNotification);
+      }
+    }
   }
 
   //Scheduled notification creator.

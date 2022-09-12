@@ -1,9 +1,13 @@
 
 
+import 'dart:io';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/core/components/basic/bottom_sheet_divider.dart';
 import 'package:flutter_mood_tracker/core/components/button/toggle_button.dart';
+import 'package:flutter_mood_tracker/main.dart';
 import 'package:flutter_mood_tracker/product/components/button/go_back_button.dart';
 import 'package:flutter_mood_tracker/product/components/text/header_text.dart';
 import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
@@ -41,7 +45,7 @@ class SettingsView extends StatelessWidget {
               child: ListView(
                 children: [
                   SettingsMenuItem(
-                    onPressed: () async {
+                    onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () async {
                       final result = await TimePicker.show<DateTime?>(
                         context: context,
                         sheet: TimePickerSheet(
@@ -63,13 +67,14 @@ class SettingsView extends StatelessWidget {
                         savedSettingsModel.setWakeUpHour = result.hour;
                         savedSettingsModel.setWakeUpMinute = result.minute;
                         sharedPref.saveSettingsModel(savedSettingsModel);
+                        nextAlarmSetup();
                       }
                     }, 
                     imgPath: PngPaths(themeInfo: ThemeInfo.dark).clock,
                     text: 'Set waking up time',
                   ),
                   SettingsMenuItem(
-                    onPressed: () async {
+                    onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () async {
                       final result = await TimePicker.show<DateTime?>(
                         context: context,
                         sheet: TimePickerSheet(
@@ -92,6 +97,7 @@ class SettingsView extends StatelessWidget {
                         savedSettingsModel.setSleepHour = result.hour;
                         savedSettingsModel.setSleepMinute = result.minute;
                         sharedPref.saveSettingsModel(savedSettingsModel);
+                        nextAlarmSetup();
                       }
                     }, 
                     imgPath: PngPaths(themeInfo: ThemeInfo.dark).clock,
@@ -99,7 +105,7 @@ class SettingsView extends StatelessWidget {
                   ),
                   const Divider(height: 1),
                   SettingsMenuItem(
-                    onPressed: () {
+                    onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () {
                       showModalBottomSheet(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(RoundSizes.showModelMainSize.value()))),
                         context: context, 
@@ -165,10 +171,11 @@ class NotificationWidget extends StatelessWidget {
                           sharedPref.saveSettingsModel(settingsModel);
                           if (isSelected) {
                             notificationService.simpleNotification();
-                            notificationService.setNextNotification();
+                            nextAlarmSetup();
                           }
                           else {
                             notificationService.cancelAllScheduledNotifications();
+                            AndroidAlarmManager.cancel(0);
                           }
                         },
                         borderRadius: 5,
@@ -278,8 +285,7 @@ class _NotificationCountSelectionState extends State<NotificationCountSelection>
           settingsModel.setNotificationCountInADay = value ?? counterValue;
           counterValue = value ?? counterValue;
           widget.sharedPref.saveSettingsModel(settingsModel);
-          AwesomeNotificationService().setNextNotification();
-
+          nextAlarmSetup();
         });
       },
     );

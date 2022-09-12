@@ -16,7 +16,6 @@ class RecordedMoodModel{
 
   @override
   String toString() {
-    // TODO: implement toString
     return ('Date: ${date.toString()}, MoodList: ${moodList.toString()}');
   }
 }
@@ -35,7 +34,6 @@ class MoodDateModel {
 
   @override
   String toString() {
-    // TODO: implement toString
     return '$day$month$year';
   }
 
