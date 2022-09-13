@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 import 'package:flutter_mood_tracker/product/pages/settings/model/settings_model.dart';
@@ -25,8 +26,8 @@ class AwesomeNotificationService {
           wakeUpScreen: false,
           id: ChannelIds.notificationOn.index,
           channelKey: ChannelKeys.notificationOn.name,
-          title: 'Notifications On.',
-          body: 'Reminder notifications is now on. We will send notification according to your settings.',
+          title: 'notificationon'.tr(),
+          body: 'remindernotificationon'.tr(),
           notificationLayout: NotificationLayout.Default),
     );
   }
@@ -37,8 +38,8 @@ class AwesomeNotificationService {
           wakeUpScreen: false,
           id: ChannelIds.moodReminder.index,
           channelKey: ChannelKeys.moodReminder.name,
-          title: 'How do you feel?',
-          body: 'Save your feels for track mood changes in your day.',
+          title: 'howdoyoufeel'.tr(),
+          body: 'saveyourfeels'.tr(),
           notificationLayout: NotificationLayout.BigText),
     );
   }
@@ -81,25 +82,26 @@ void showNotification(){
     }
   }
 
-  //Scheduled notification creator.
-  Future<void> scheduledNotification(ChannelIds id, ChannelKeys key, int hour, int minute) async { 
-
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: id.index,
-        wakeUpScreen: true,
-        channelKey: key.name,
-        title: 'How do you feel?',
-        body: 'Save your feels for track mood changes in your day.',  
-        notificationLayout: NotificationLayout.Default,
-      ),
-      schedule: NotificationCalendar(
-        hour: hour,
-        minute: minute,
-        timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
-      )
-    );
-  }
+  ////Scheduled notification creator.
+  //Future<void> scheduledNotification(ChannelIds id, ChannelKeys key, int hour, int minute) async { 
+//
+  //  await AwesomeNotifications().createNotification(
+  //    content: NotificationContent(
+  //      id: id.index,
+  //      wakeUpScreen: true,
+  //      channelKey: key.name,
+  //      title: 'How do you feel?',
+  //      body: 'Save your feels for track mood changes in your day.',  
+  //      notificationLayout: NotificationLayout.Default,
+  //    ),
+  //    schedule: NotificationCalendar(
+  //      hour: hour,
+  //      minute: minute,
+  //      timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+  //    )
+  //  );
+  //}
+//
 
   //Listeners.  
   void awesomeNotificationAddMoodListener(BuildContext context, ChannelIds id){
@@ -126,39 +128,39 @@ void showNotification(){
 
 }
 
-  void setNextNotification(){
-    SharedPref sharedPref = SharedPref();
-    SettingsModel settingsModel = sharedPref.getSavedSettingsModel();
-    DateTime dateTime = DateTime.now();
-
-    int countOfNotif = settingsModel.notificationCountInADay;
-    int wakeUpHours = settingsModel.sleepHour - settingsModel.wakeUpHour;
-    int intervalHour = 0;
-    int intervalMinute = ((wakeUpHours*60)~/countOfNotif);
-    if(intervalMinute >= 60){
-      intervalHour = intervalMinute~/60;
-      intervalMinute = intervalMinute%60;
-    }
-
-    if(settingsModel.isNotificationOn){ //Notification settings check
-      if (dateTime.hour + intervalHour>= settingsModel.wakeUpHour && dateTime.hour + intervalHour < settingsModel.sleepHour) { //is wake hour
-        if (dateTime.minute + intervalMinute > settingsModel.wakeUpMinute) { // is wake minutes of hour.
-          if((dateTime.minute + intervalMinute)> 60){  //is next minute > 60
-            intervalHour = (dateTime.minute + intervalMinute)~/60; //add 60+ to intervalHour + 1;
-            intervalMinute = 60-intervalMinute; // left goes to minutes.
-          }
-          scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, dateTime.hour + intervalHour, dateTime.minute + intervalMinute);
-        }
-        else {
-          scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, settingsModel.wakeUpHour , settingsModel.wakeUpMinute + 15);
-        }
-      }
-      else {
-          scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, settingsModel.wakeUpHour , settingsModel.wakeUpMinute + 15);
-      }
-    }
-
-  }
+  //void setNextNotification(){
+  //  SharedPref sharedPref = SharedPref();
+  //  SettingsModel settingsModel = sharedPref.getSavedSettingsModel();
+  //  DateTime dateTime = DateTime.now();
+//
+  //  int countOfNotif = settingsModel.notificationCountInADay;
+  //  int wakeUpHours = settingsModel.sleepHour - settingsModel.wakeUpHour;
+  //  int intervalHour = 0;
+  //  int intervalMinute = ((wakeUpHours*60)~/countOfNotif);
+  //  if(intervalMinute >= 60){
+  //    intervalHour = intervalMinute~/60;
+  //    intervalMinute = intervalMinute%60;
+  //  }
+//
+  //  if(settingsModel.isNotificationOn){ //Notification settings check
+  //    if (dateTime.hour + intervalHour>= settingsModel.wakeUpHour && dateTime.hour + intervalHour < settingsModel.sleepHour) { //is wake hour
+  //      if (dateTime.minute + intervalMinute > settingsModel.wakeUpMinute) { // is wake minutes of hour.
+  //        if((dateTime.minute + intervalMinute)> 60){  //is next minute > 60
+  //          intervalHour = (dateTime.minute + intervalMinute)~/60; //add 60+ to intervalHour + 1;
+  //          intervalMinute = 60-intervalMinute; // left goes to minutes.
+  //        }
+  //        scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, dateTime.hour + intervalHour, dateTime.minute + intervalMinute);
+  //      }
+  //      else {
+  //        scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, settingsModel.wakeUpHour , settingsModel.wakeUpMinute + 15);
+  //      }
+  //    }
+  //    else {
+  //        scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, settingsModel.wakeUpHour , settingsModel.wakeUpMinute + 15);
+  //    }
+  //  }
+//
+  //}
 
   //Permission control method.
   void awesomeNotificationsPermissionCheck(BuildContext context){
@@ -166,15 +168,15 @@ void showNotification(){
     AwesomeNotifications().isNotificationAllowed().then((value) => {
       if(!value){
         showDialog(context: context, builder: (context) => AlertDialog(
-          title: const Text('Allow Notifications'),
-          content: const Text('We would like to notification permisson for sending notification.'),
+          title: Text('allownotifications'.tr()),
+          content: Text('notificationpermisson'.tr()),
           actions: [
             TextButton(onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Don\'t Allow' )),
+            child: Text('dontallow'.tr())),
             ElevatedButton(onPressed: () => AwesomeNotifications().requestPermissionToSendNotifications().then((value) => Navigator.pop(context)),
-            child: const Text('Allow'),
+            child: Text('allow'.tr()),
             )
           ],  
           )

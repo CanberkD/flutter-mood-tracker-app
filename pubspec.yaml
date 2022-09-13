@@ -53,8 +53,10 @@ dependencies:
 
   #notification
   awesome_notifications: ^0.6.21
-  flutter_background: ^1.1.0
   android_alarm_manager_plus: ^2.0.6+1
+
+  #localization
+  easy_localization: ^3.0.1
   
 dev_dependencies:
   flutter_test:
@@ -80,6 +82,7 @@ flutter:
     assets:
       - assets/png/light/
       - assets/png/dark/
+      - assets/translations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

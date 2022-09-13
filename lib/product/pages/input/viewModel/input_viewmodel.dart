@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
@@ -167,7 +168,7 @@ abstract class _InputViewModelBase with Store {
     if (finalList.isNotEmpty) {
       return finalList;
     } else {
-      return ['Alone'];
+      return ['alone'.tr()];
     }
   }
 
@@ -177,7 +178,7 @@ abstract class _InputViewModelBase with Store {
         return activityList[i];
       }
     }
-    return 'Nothing';
+    return 'nothing'.tr();
   }
 
   String findMood(List<bool> list) {

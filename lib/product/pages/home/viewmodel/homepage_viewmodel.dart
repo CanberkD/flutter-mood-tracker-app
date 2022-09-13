@@ -17,7 +17,7 @@ abstract class _HomePageViewModelBase with Store {
   late final SharedPref sharedPref;
   late final ProjectDateTime _dateTime;
 
-  PngPaths pngPaths = PngPaths(themeInfo: ThemeInfo.dark);
+  late PngPaths pngPaths = PngPaths(themeInfo: ThemeInfo.dark);
   
   @observable
   int dayIndex = ProjectDateTime().day;

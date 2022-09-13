@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 import 'package:flutter_mood_tracker/product/pages/settings/model/settings_model.dart';
+import 'package:flutter_mood_tracker/product/pages/settings/view/settings_view.dart';
 import 'package:flutter_mood_tracker/product/service/awesome_notifications_service.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:flutter_mood_tracker/product/theme/theme_store.dart';
@@ -21,8 +23,10 @@ void nextAlarmSetup() async {
   AndroidAlarmManager.cancel(0);
   const int alarmId = 0;
   DateTime dateTime = DateTime.now();
+
   await SharedPrefInstance.init();
   SettingsModel settingsModel = SharedPref().getSavedSettingsModel();
+
   int countOfNotif = settingsModel.notificationCountInADay;
   int wakeUpHours = settingsModel.sleepHour - settingsModel.wakeUpHour;
   int intervalMinute = ((wakeUpHours * 60) ~/ countOfNotif);
@@ -74,6 +78,12 @@ Future<void> main() async {
         channelShowBadge: false)
   ]);
 
+  //For localization.
+  await EasyLocalization.ensureInitialized();
+
+  SharedPref sharedPref = SharedPref();
+  SettingsModel settingsModel = sharedPref.getSavedSettingsModel();
+  
   //If device android initialize alarm
   if (Platform.isAndroid) {
     AndroidAlarmManager.initialize();
@@ -81,7 +91,16 @@ Future<void> main() async {
 
   runApp(Provider(
     create: (context) => ThemeStore(), 
-    child: const MyApp()),);
+    child: EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('tr', 'TR')],
+      path: 'assets/translations', 
+      fallbackLocale:  
+        settingsModel.language == LanguageKeys.english.name ? const Locale('en', 'US'):
+        settingsModel.language == LanguageKeys.turkish.name ? const Locale('tr', 'TR') : const Locale('en', 'US'),
+      child: const MyApp()
+      )
+    ),
+  );
 
   //If device android initialize alarm
   if (Platform.isAndroid) {
@@ -101,6 +120,9 @@ class MyApp extends StatelessWidget {
     return Observer(
       builder: (context) {
       return MaterialApp(
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         title: 'Flutter Demo',
         theme: themeStore.themeData,
         initialRoute: Routes.home.name,

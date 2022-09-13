@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_mood_tracker/product/pages/home/model/infogram_model.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
@@ -144,32 +145,32 @@ class SharedPref{
 
     for(int i = 0; i < 3 ; i++){
       if(mapOfHappy.length >= (i + 1)) {
-        infogramModelItemsHappy.add('${mapOfHappy.keys.elementAt(i)}: ${mapOfHappy.values.elementAt(i)} times ');
+        infogramModelItemsHappy.add('${mapOfHappy.keys.elementAt(i)}: ${mapOfHappy.values.elementAt(i)} ${'times'.tr()} ');
       }
       if(mapOfSad.length >= i + 1){
-        infogramModelItemsSad.add('${mapOfSad.keys.elementAt(i)}: ${mapOfSad.values.elementAt(i)} times ');
+        infogramModelItemsSad.add('${mapOfSad.keys.elementAt(i)}: ${mapOfSad.values.elementAt(i)} ${'times'.tr()} ');
       }
       if(mapOfHappyActivitys.length >= i + 1){
-        infogramModelItemsHappyActivity.add('${mapOfHappyActivitys.keys.elementAt(i)}: ${mapOfHappyActivitys.values.elementAt(i)} times ');
+        infogramModelItemsHappyActivity.add('${mapOfHappyActivitys.keys.elementAt(i)}: ${mapOfHappyActivitys.values.elementAt(i)} ${'times'.tr()} ');
       }
       if(mapOfSadActivitys.length >= i + 1){
-        infogramModelItemsSadActivity.add('${mapOfSadActivitys.keys.elementAt(i)}: ${mapOfSadActivitys.values.elementAt(i)} times ');
+        infogramModelItemsSadActivity.add('${mapOfSadActivitys.keys.elementAt(i)}: ${mapOfSadActivitys.values.elementAt(i)} ${'times'.tr()} ');
       }
     }
 
     List<InfogramModel> finalList = List.empty(growable: true);
 
     if(infogramModelItemsHappy.isNotEmpty){
-      finalList.add(InfogramModel(title: 'Peoples make you happy', items: infogramModelItemsHappy));
+      finalList.add(InfogramModel(title: 'peoplesmakeyouhappy'.tr(), items: infogramModelItemsHappy));
     }
     if(infogramModelItemsSad.isNotEmpty){
-      finalList.add(InfogramModel(title: 'Peoples make you sad', items: infogramModelItemsSad));
+      finalList.add(InfogramModel(title: 'peoplesmakeyousad'.tr(), items: infogramModelItemsSad));
     }
     if(infogramModelItemsHappyActivity.isNotEmpty){
-      finalList.add(InfogramModel(title: 'Activitys make you happy', items: infogramModelItemsHappyActivity));
+      finalList.add(InfogramModel(title: 'activitysmakeyouhappy'.tr(), items: infogramModelItemsHappyActivity));
     }
     if(infogramModelItemsSadActivity.isNotEmpty){
-      finalList.add(InfogramModel(title: 'Activitys make you sad', items: infogramModelItemsSadActivity));
+      finalList.add(InfogramModel(title: 'activitysmakeyousad'.tr(), items: infogramModelItemsSadActivity));
     }
     return finalList;
   }
@@ -214,7 +215,7 @@ class SharedPref{
         sleepMinute: 30, 
         isNotificationOn: true, 
         notificationCountInADay: 5, 
-        language: 'English', 
+        language: 'EN', 
         isThemeLight: true
       );
   } 

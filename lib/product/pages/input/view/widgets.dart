@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mood_tracker/core/components/basic/bottom_sheet_divider.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart'
 import 'package:flutter_mood_tracker/product/consts/color.dart';
 import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
-import 'package:flutter_mood_tracker/product/consts/text.dart';
 
 import '../viewModel/input_viewmodel.dart';
 
@@ -44,8 +44,8 @@ class SaveButton extends StatelessWidget {
                     },
                   )),
               onPressed: (){_model.saveButtonClicked(context);},
-              child: Text(ProjectText.inputpageSaveButtonText,
-                  style: TextStyle(color: ProjectColors.primaryBlack.value())),
+              child: Text('inputpageSaveButtonText'.tr(),
+                  style: TextStyle(color: ProjectColors.primaryBlack.value())).tr(),
             ),
           ),
         ),
@@ -65,7 +65,7 @@ class PeopleSelectionTitle extends StatelessWidget {
       padding: EdgeInsets.only(
           top: PaddingSizes.mainColumnVerticalPadding.value(),
           bottom: PaddingSizes.small.value()),
-      child: const SubTitle(text: ProjectText.inputpagePeopleSelectionTitle),
+      child: SubTitle(text: 'inputpagePeopleSelectionTitle'.tr()),
     );
   }
 }
@@ -82,7 +82,7 @@ class ActivitySelectionTitle extends StatelessWidget {
         top: PaddingSizes.mainColumnVerticalPadding.value(),
         bottom: PaddingSizes.small.value(),
       ),
-      child: const SubTitle(text: ProjectText.inputpageActivitySelectionTitle),
+      child: SubTitle(text: 'inputpageActivitySelectionTitle'.tr()),
     );
   }
 }
@@ -116,7 +116,7 @@ class MoodSelectionTitle extends StatelessWidget {
     return Padding(
       padding:
           EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value()),
-      child: const SubTitle(text: ProjectText.inputpageMoodSelectionTitle),
+      child: SubTitle(text: 'inputpageMoodSelectionTitle'.tr()),
     );
   }
 }
@@ -131,7 +131,7 @@ class MainHeader extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: PaddingSizes.mainColumHorizontalPadding.value()),
-      child: const HeaderTextWidget(text: ProjectText.inputpageTitleChoose),
+      child: HeaderTextWidget(text: 'inputpageTitleChoose'.tr()),
     );
   }
 }
@@ -366,7 +366,7 @@ class AddItemWidget extends StatelessWidget {
             SubTitle(
                 padding: EdgeInsets.only(top: PaddingSizes.small.value()),
                 alignment: Alignment.center,
-                text: isActivity ? 'Add Activity' : 'Add Person'),
+                text: isActivity ? 'addctivity'.tr() : 'addperson'.tr()),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(
@@ -385,7 +385,7 @@ class AddItemWidget extends StatelessWidget {
                           textCapitalization: TextCapitalization.words,
                           textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
-                              hintText: isActivity ? 'Activity' : 'Name',
+                              hintText: isActivity ? 'activity'.tr() : 'name'.tr(),
                               counterText: ''),
                           maxLength: 12,
                           controller: _controller,
@@ -400,7 +400,7 @@ class AddItemWidget extends StatelessWidget {
                                   onAddPressed.call(_controller.text);
                                 }
                               },
-                              child: const Text('Add')),
+                              child: Text('add'.tr())),
                         )
                       ]),
                 ),

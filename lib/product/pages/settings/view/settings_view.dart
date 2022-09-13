@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/core/components/basic/bottom_sheet_divider.dart';
 import 'package:flutter_mood_tracker/core/components/button/toggle_button.dart';
@@ -39,120 +40,22 @@ class SettingsView extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(left: PaddingSizes.mainColumHorizontalPadding.value()),
-            child: const Align(alignment: Alignment.centerLeft, child: HeaderTextWidget(text: 'Settings')),
+            child: Align(alignment: Alignment.centerLeft, child: HeaderTextWidget(text: 'settings'.tr())),
           ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value()),
               child: ListView(
                 children: [
-                  SettingsMenuItem(
-                    onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () async {
-                      final result = await TimePicker.show<DateTime?>(
-                        context: context,
-                        sheet: TimePickerSheet(
-                          wheelNumberSelectedStyle: SettingsConst.timePickerTitleTextStyle,
-                          minuteTitleStyle: SettingsConst.timePickerTitleTextStyle,
-                          hourTitleStyle: SettingsConst.timePickerTitleTextStyle,
-                          sheetCloseIcon: Icons.close,
-                          sheetCloseIconColor: ProjectColors.primaryBlack.value(),
-                          saveButtonColor: ProjectColors.primaryBlue.value(),
-                          sheetTitle: 'Set waking up time',
-                          hourTitle: 'Hour',
-                          minuteTitle: 'Minute',
-                          saveButtonText: 'Save',
-                        ),
-                      );
-                      if(result != null){
-                        SharedPref sharedPref = SharedPref();
-                        SettingsModel savedSettingsModel = sharedPref.getSavedSettingsModel();
-                        savedSettingsModel.setWakeUpHour = result.hour;
-                        savedSettingsModel.setWakeUpMinute = result.minute;
-                        sharedPref.saveSettingsModel(savedSettingsModel);
-                        nextAlarmSetup();
-                      }
-                    }, 
-                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).clock,
-                    text: 'Set waking up time',
-                  ),
+                  const WakeupTime(),
                   const Divider(height: 1),
-                  SettingsMenuItem(
-                    onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () async {
-                      final result = await TimePicker.show<DateTime?>(
-                        context: context,
-                        sheet: TimePickerSheet(
-                          wheelNumberSelectedStyle: SettingsConst.timePickerTitleTextStyle,
-                          minuteTitleStyle: SettingsConst.timePickerTitleTextStyle,
-                          hourTitleStyle: SettingsConst.timePickerTitleTextStyle,
-                          sheetCloseIcon: Icons.close,
-                          sheetCloseIconColor: ProjectColors.primaryBlack.value(),
-                          saveButtonColor: ProjectColors.primaryBlue.value(),
-                          sheetTitle: 'Set sleep time',
-                          hourTitle: 'Hour',
-                          minuteTitle: 'Minute',
-                          saveButtonText: 'Save',
-                        ),
-                      );
-                      if(result != null){
-                        SharedPref sharedPref = SharedPref();
-                        SettingsModel savedSettingsModel = sharedPref.getSavedSettingsModel();
-                        savedSettingsModel.setSleepHour = result.hour;
-                        savedSettingsModel.setSleepMinute = result.minute;
-                        sharedPref.saveSettingsModel(savedSettingsModel);
-                        nextAlarmSetup();
-                      }
-                    }, 
-                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).clock,
-                    text: 'Set sleep time',
-                  ),
+                  const SleepTime(),
                   const Divider(height: 1),
-                  SettingsMenuItem(
-                    onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () {
-                      showModalBottomSheet(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(RoundSizes.showModelMainSize.value()))),
-                        context: context, 
-                        builder: (context) {
-                          return NotificationWidget(sharedPref: sharedPref);
-                        },);
-                    }, 
-                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).notification,
-                    text: 'Notification',
-                  ),
+                  Notification(sharedPref: sharedPref),
                   const Divider(height: 1),
-                  SettingsMenuItem(
-                    onPressed: () {}, 
-                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).world,
-                    text: 'Language',
-                  ),
+                  Language(sharedPref: sharedPref),
                   const Divider(height: 1),
-                  SettingsMenuItem(
-                    onPressed: () {
-                      //Changing theme. User settings in storage, change inside this method.
-                    }, 
-                    imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).theme,
-                    text: 'Theme',
-                    trailingWidget: Padding(
-                      padding: EdgeInsets.symmetric(vertical: SettingsConst.themeToggleButtonPadding),
-                      child: ToggleButton(
-                        width: SettingsConst.themeToggleButtonWidth,
-                        onpressed: (isSelected) {
-                          context.read<ThemeStore>().switchTheme();
-                        }, 
-                        notSelectedColor:ProjectColors.primaryBlack.value(), 
-                        selectedColor:  ProjectColors.primaryWhite.value(), 
-                        notSelectedChild: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Dark'),
-                        ), 
-                        selectedChild: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Light', style: TextStyle(color: ProjectColors.primaryBlack.value()),),
-                        ), 
-                        isShadowVisible: false,
-                        isSelected: sharedPref.getSavedSettingsModel().isThemeLight
-                        ),
-                    ),
-                  ),
+                  MenuTheme(sharedPref: sharedPref),
                 ],
               ),
             ),
@@ -160,6 +63,211 @@ class SettingsView extends StatelessWidget {
         ],
       ),
       );
+  }
+}
+
+class WakeupTime extends StatelessWidget {
+  const WakeupTime({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsMenuItem(
+      onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () async {
+        final result = await TimePicker.show<DateTime?>(
+          context: context,
+          sheet: TimePickerSheet(
+            wheelNumberSelectedStyle: SettingsConst.timePickerTitleTextStyle,
+            minuteTitleStyle: SettingsConst.timePickerTitleTextStyle,
+            hourTitleStyle: SettingsConst.timePickerTitleTextStyle,
+            sheetCloseIcon: Icons.close,
+            sheetCloseIconColor: ProjectColors.primaryBlack.value(),
+            saveButtonColor: ProjectColors.primaryBlue.value(),
+            sheetTitle: 'setwakinguptime.'.tr(),
+            hourTitle: 'hour'.tr(),
+            minuteTitle: 'minute'.tr(),
+            saveButtonText: 'save'.tr(),
+          ),
+        );
+        if(result != null){
+          SharedPref sharedPref = SharedPref();
+          SettingsModel savedSettingsModel = sharedPref.getSavedSettingsModel();
+          savedSettingsModel.setWakeUpHour = result.hour;
+          savedSettingsModel.setWakeUpMinute = result.minute;
+          sharedPref.saveSettingsModel(savedSettingsModel);
+          nextAlarmSetup();
+        }
+      }, 
+      imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).clock,
+      text: 'setwakinguptime'.tr(),
+    );
+  }
+}
+
+class SleepTime extends StatelessWidget {
+  const SleepTime({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsMenuItem(
+      onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () async {
+        final result = await TimePicker.show<DateTime?>(
+          context: context,
+          sheet: TimePickerSheet(
+            wheelNumberSelectedStyle: SettingsConst.timePickerTitleTextStyle,
+            minuteTitleStyle: SettingsConst.timePickerTitleTextStyle,
+            hourTitleStyle: SettingsConst.timePickerTitleTextStyle,
+            sheetCloseIcon: Icons.close,
+            sheetCloseIconColor: ProjectColors.primaryBlack.value(),
+            saveButtonColor: ProjectColors.primaryBlue.value(),
+            sheetTitle: 'setsleeptime'.tr(),
+            hourTitle: 'hour'.tr(),
+            minuteTitle: 'minute'.tr(),
+            saveButtonText: 'save'.tr(),
+          ),
+        );
+        if(result != null){
+          SharedPref sharedPref = SharedPref();
+          SettingsModel savedSettingsModel = sharedPref.getSavedSettingsModel();
+          savedSettingsModel.setSleepHour = result.hour;
+          savedSettingsModel.setSleepMinute = result.minute;
+          sharedPref.saveSettingsModel(savedSettingsModel);
+          nextAlarmSetup();
+        }
+      }, 
+      imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).clock,
+      text: 'setsleeptime'.tr(),
+    );
+  }
+}
+
+class Notification extends StatelessWidget {
+  const Notification({
+    Key? key,
+    required this.sharedPref,
+  }) : super(key: key);
+
+  final SharedPref sharedPref;
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsMenuItem(
+      onPressed: Platform.isIOS ? () {ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Notification works only on Android.'),));} : () {
+        showModalBottomSheet(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(RoundSizes.showModelMainSize.value()))),
+          context: context, 
+          builder: (context) {
+            return NotificationWidget(sharedPref: sharedPref);
+          },);
+      }, 
+      imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).notification,
+      text: 'notification'.tr(),
+    );
+  }
+}
+
+class MenuTheme extends StatelessWidget {
+  const MenuTheme({
+    Key? key,
+    required this.sharedPref,
+  }) : super(key: key);
+
+  final SharedPref sharedPref;
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsMenuItem(
+      clickable: false,
+      onPressed: () {}, 
+      imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).theme,
+      text: 'theme'.tr(),
+      trailingWidget: Padding(
+        padding: EdgeInsets.symmetric(vertical: SettingsConst.themeToggleButtonPadding),
+        child: ToggleButton(
+          width: SettingsConst.themeToggleButtonWidth,
+          onpressed: (isSelected) {
+            context.read<ThemeStore>().switchTheme();
+          }, 
+          notSelectedColor:ProjectColors.primaryBlack.value(), 
+          selectedColor:  ProjectColors.primaryWhite.value(), 
+          notSelectedChild: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('dark'.tr()),
+          ), 
+          selectedChild: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('light'.tr(), style: TextStyle(color: ProjectColors.primaryBlack.value()),),
+          ), 
+          isShadowVisible: false,
+          isSelected: sharedPref.getSavedSettingsModel().isThemeLight
+          ),
+      ),
+    );
+  }
+}
+
+class Language extends StatefulWidget {
+  const Language({
+    Key? key,
+    required this.sharedPref,
+  }) : super(key: key);
+
+  final SharedPref sharedPref;
+
+  @override
+  State<Language> createState() => _LanguageState();
+}
+
+class _LanguageState extends State<Language> {
+  late String languageValue;
+
+  @override
+  void initState() {
+    super.initState();
+    languageValue = widget.sharedPref.getSavedSettingsModel().language;
+  } 
+
+  @override
+  Widget build(BuildContext context) {
+    return SettingsMenuItem(
+      clickable: false,
+      onPressed: () {}, 
+      imgPath: PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ?  ThemeInfo.dark: ThemeInfo.light).world,
+      trailingWidget: DropdownButton2<String>(
+        dropdownWidth: 100,
+        onChanged: (value) {
+          if(value == LanguageKeys.turkish.name){
+            SettingsModel settingsModel = widget.sharedPref.getSavedSettingsModel();
+            settingsModel.language = LanguageKeys.turkish.name;
+            widget.sharedPref.saveSettingsModel(settingsModel);
+            context.setLocale(const Locale('tr', 'TR'));
+          } 
+          else if(value == LanguageKeys.english.name){
+            SettingsModel settingsModel = widget.sharedPref.getSavedSettingsModel();
+            settingsModel.language = LanguageKeys.english.name;
+            widget.sharedPref.saveSettingsModel(settingsModel);
+            context.setLocale(const Locale('en', 'US'));
+          }
+          setState(() {
+            languageValue = value ?? languageValue; 
+          });
+        },
+        value: languageValue,
+        items: [
+          DropdownMenuItem(
+            value: LanguageKeys.turkish.name,
+            child: Text('languageTurkish'.tr(), ),
+          ),
+          DropdownMenuItem(
+            value: LanguageKeys.english.name,
+            child: Text('languageEnglish'.tr(), ),
+          )
+      ]),
+      text: 'language'.tr(),
+    );
   }
 }
 
@@ -185,7 +293,7 @@ class NotificationWidget extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Expanded(flex: 2,child: SubTitle(text: 'Notifications:')),
+                    Expanded(flex: 2,child: SubTitle(text: 'notificationsdoubledot'.tr())),
                     Expanded(
                       flex: 1,
                       child: ToggleButton(
@@ -208,13 +316,13 @@ class NotificationWidget extends StatelessWidget {
                         heigth: SettingsConst.notificationOnOffButtonHeight,
                         notSelectedColor: ProjectColors.primaryWhite.value(), 
                         selectedColor: ProjectColors.primaryBlue.value(), 
-                        notSelectedChild: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Off'),
+                        notSelectedChild: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('off'.tr()),
                         ), 
                         selectedChild: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('On', style: TextStyle(color: ProjectColors.primaryWhite.value()),),
+                          child: Text('on'.tr(), style: TextStyle(color: ProjectColors.primaryWhite.value()),),
                         ), 
                         isSelected: sharedPref.getSavedSettingsModel().isNotificationOn),
                     ),
@@ -222,7 +330,7 @@ class NotificationWidget extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    const Expanded(flex: 2,child: SubTitle(text: 'How many times would you like to receive notifications in a day?')),
+                    Expanded(flex: 2,child: SubTitle(text: 'howmanytimenotification'.tr())),
                     Expanded(flex: 1, child: Center(child: NotificationCountSelection(sharedPref: sharedPref))),
                   ],
                 ),
@@ -242,17 +350,21 @@ class SettingsMenuItem extends StatelessWidget {
     required this.text,
     required this.imgPath,
     this.trailingWidget,
-  }) : super(key: key);
+    bool? clickable,
+  }) : 
+  _clickable = clickable ?? true, 
+  super(key: key);
 
   final void Function() onPressed;
   final String text;
   final String imgPath;
   final Widget? trailingWidget;
+  final bool _clickable;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      onTap: _clickable ? onPressed : null,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: PaddingSizes.mainColumHorizontalPadding.value()),
         child: ListTile(
@@ -325,4 +437,8 @@ class SettingsConst {
   static double get themeToggleButtonPadding => 13.0;
   static double get themeToggleButtonWidth => 70;
   static int get maxNotificationCount => 10;
+}
+
+enum LanguageKeys {
+  english, turkish
 }

@@ -1,10 +1,10 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mood_tracker/core/components/basic/bottom_sheet_divider.dart';
 import 'package:flutter_mood_tracker/product/components/text/header_text.dart';
 import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
-import 'package:flutter_mood_tracker/product/consts/text.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 
@@ -27,7 +27,7 @@ class HelloBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const HeaderTextWidget(text: ProjectText.homepageTitleHello),
+        HeaderTextWidget(text: 'homepageTitleHello'.tr()),
         Text(model.helloBarDateStr,
             style: Theme.of(context).textTheme.subtitle2),
       ],
@@ -50,7 +50,7 @@ class TodayBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SubTitle(text: ProjectText.homepageSubtitleToday),
+        SubTitle(text: "homepageSubtitleToday".tr()),
         SizedBox(
           width: MediaQuery.of(context).size.width,
           height: HomePageViewConsts.todayCardSize,
@@ -94,7 +94,7 @@ class TodayBar extends StatelessWidget {
                   width: HomePageViewConsts.todayCardIconSize,
                   height: HomePageViewConsts.todayCardIconSize,
                   child: Image.asset(_model.pngPaths.getLightPlus())),
-              const Text('Add mood'),
+              Text('addmood'.tr()),
             ],
           )),
     );
@@ -320,7 +320,7 @@ class RecordedTopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SubTitle(text: ProjectText.homepageSubtitleRecorded),
+          SubTitle(text: 'homepageSubtitleRecorded'.tr()),
           Padding(
             padding: EdgeInsets.only(
                 right: PaddingSizes.mainColumHorizontalPadding.value()),
@@ -393,8 +393,8 @@ class RecordedListFilter extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SubTitle(
-                          text: 'Day',
+                        SubTitle(
+                          text: 'day'.tr(),
                           padding: EdgeInsets.zero,
                         ),
                         Observer(builder: (_) {
@@ -413,8 +413,8 @@ class RecordedListFilter extends StatelessWidget {
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const SubTitle(
-                          text: 'Month',
+                        SubTitle(
+                          text: 'month'.tr(),
                           padding: EdgeInsets.zero,
                         ),
                         Observer(builder: (_) {
@@ -433,8 +433,8 @@ class RecordedListFilter extends StatelessWidget {
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const SubTitle(
-                          text: 'Year',
+                        SubTitle(
+                          text: 'year'.tr(),
                           padding: EdgeInsets.zero,
                         ),
                         Observer(builder: (_) {
@@ -459,7 +459,7 @@ class RecordedListFilter extends StatelessWidget {
                   bottom: PaddingSizes.mainColumnVerticalPadding.value()),
               child: ElevatedButton(
                   onPressed: () => _model.filterRecordedList(context), 
-                  child: const Text('Filter')),
+                  child: Text('filter'.tr())),
             ),
             
           ],

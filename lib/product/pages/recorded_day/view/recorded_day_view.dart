@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/components/button/go_back_button.dart';
 import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
@@ -23,7 +24,7 @@ class RecordedDayView extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: Text(ProjectDateTime().convertStringDateForRecordedDayAll(recordedMoodModel.date.day, recordedMoodModel.date.month, recordedMoodModel.date.year), style: TextStyle(color: ProjectColors.primaryBlack.value())),
+        title: Text(ProjectDateTime().convertStringDateForRecordedDayAll(recordedMoodModel.date.day, recordedMoodModel.date.month, recordedMoodModel.date.year), style: Theme.of(context).textTheme.subtitle1),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -64,14 +65,14 @@ class RecordedDayView extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      Expanded(child: Text('Activity: ', style: Theme.of(context).textTheme.headline6,)),
+                                      Expanded(child: Text('activitydoubledot'.tr(), style: Theme.of(context).textTheme.headline6,)),
                                       Expanded(child: Text(recordedMoodModel.moodList[index].activity, style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.w300, fontSize: 16),)),
                                     ],
                                   ),
                                   const Divider(),
                                   Row(
                                     children: [
-                                      Expanded(child: Text('Peoples With: ', style: Theme.of(context).textTheme.headline6)),
+                                      Expanded(child: Text('peopleswith'.tr(), style: Theme.of(context).textTheme.headline6)),
                                       Expanded(child: Text(recordedMoodModel.moodList[index].peoplesWith.toString().replaceAll("]","").replaceAll("[",""), style: Theme.of(context).textTheme.headline6?.copyWith(fontWeight: FontWeight.w300, fontSize: 16)))
                                     ],
                                   )

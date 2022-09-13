@@ -1,8 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/components/button/icon_button.dart';
 import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
-import 'package:flutter_mood_tracker/product/consts/text.dart';
 import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 import './widgets.dart';
 import 'package:flutter_mood_tracker/product/pages/home/viewmodel/homepage_viewmodel.dart';
@@ -51,13 +51,13 @@ class _HomePageViewState extends State<HomePageView> {
                   padding: EdgeInsets.only(top: PaddingSizes.mainColumnVerticalPadding.value(), bottom: PaddingSizes.mainColumnVerticalPadding.value()),
                   child: TodayBar(model: _model, context: context),
                 ),
-                const SubTitle(text: ProjectText.homepageSubtitleInfogram),
-                _model.infogramList.isNotEmpty ? Infogram(model: _model,) : const InformationText(text: ProjectText.informationEmptyInfogram),
+                SubTitle(text: 'homepageSubtitleInfogram'.tr()),
+                _model.infogramList.isNotEmpty ? Infogram(model: _model,) : InformationText(text: 'informationEmptyInfogram'.tr()),
                 Padding(
                   padding: EdgeInsets.zero,
                   child: RecordedTopBar(model: _model),
                 ),
-                _model.recordedList.isNotEmpty ? RecordedList(model: _model) : const InformationText(text: ProjectText.informationEmptyRecorded),
+                _model.recordedList.isNotEmpty ? RecordedList(model: _model) : InformationText(text: 'informationEmptyRecorded'.tr()),
               ],
             ),
         ),
