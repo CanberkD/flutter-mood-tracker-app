@@ -215,7 +215,7 @@ class SharedPref{
         sleepMinute: 30, 
         isNotificationOn: true, 
         notificationCountInADay: 5, 
-        language: 'EN', 
+        language: 'english', 
         isThemeLight: true
       );
   } 

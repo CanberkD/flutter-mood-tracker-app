@@ -35,12 +35,12 @@ class AwesomeNotificationService {
     Future<void> simpleNotificationForReminder() async {
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-          wakeUpScreen: false,
+          wakeUpScreen: true,
           id: ChannelIds.moodReminder.index,
           channelKey: ChannelKeys.moodReminder.name,
-          title: 'howdoyoufeel'.tr(),
-          body: 'saveyourfeels'.tr(),
-          notificationLayout: NotificationLayout.BigText),
+          title: 'howdoyoufeelnotification'.tr(),
+          body: 'saveyourfeelsnotification'.tr(),
+          notificationLayout: NotificationLayout.Default),
     );
   }
 

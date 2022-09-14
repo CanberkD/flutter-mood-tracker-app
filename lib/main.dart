@@ -18,37 +18,86 @@ void showNotification() {
   AwesomeNotificationService().simpleNotificationForReminder();
   nextAlarmSetup();
 }
-
 void nextAlarmSetup() async {
   AndroidAlarmManager.cancel(0);
-  const int alarmId = 0;
-  DateTime dateTime = DateTime.now();
 
-  await SharedPrefInstance.init();
+  await EasyLocalization.ensureInitialized();
+
+  DateTime now = DateTime.now();
+
+  await SharedPrefInstance
+      .init(); // if app terminated, shared pref wont initialize.
   SettingsModel settingsModel = SharedPref().getSavedSettingsModel();
 
+  //Getting wake up and sleeping times from settings model.
+  DateTime wakeUpTime = DateTime(now.year, now.month, now.day,
+      settingsModel.wakeUpHour, settingsModel.wakeUpMinute);
+  DateTime sleepTime = DateTime(now.year, now.month, now.day,
+      settingsModel.sleepHour, settingsModel.sleepMinute);
+
+  //How many times receive notification in a day.
   int countOfNotif = settingsModel.notificationCountInADay;
-  int wakeUpHours = settingsModel.sleepHour - settingsModel.wakeUpHour;
-  int intervalMinute = ((wakeUpHours * 60) ~/ countOfNotif);
+
+  //Calculating user how many minutes awake in a day. This will be use for calculating interval time between 2 notification.
+  int awakeMinutes = (sleepTime.difference(wakeUpTime).inMinutes).abs();
+
+  //Calculating interval minutes between 2 notification.
+  int intervalMinute = (awakeMinutes ~/ countOfNotif);
+
+  //Minutes -> Hour:Minute
   int intervalHour = 0;
   if (intervalMinute >= 60) {
     intervalHour = intervalMinute ~/ 60;
     intervalMinute = intervalMinute % 60;
   }
 
+  //Next notification appear interval time later. So we calculating exectly appear time.
+  now = now.add(Duration(minutes: intervalMinute, hours: intervalHour));
+
+  //And now, checking is user awake or sleeping.
   if (settingsModel.isNotificationOn) {
-    if (dateTime.hour + intervalHour >= settingsModel.wakeUpHour &&
-        dateTime.hour + intervalHour < settingsModel.sleepHour) {
-      AndroidAlarmManager.oneShot(
-          Duration(minutes: (intervalMinute + (intervalHour * 60))),
-          alarmId,
-          showNotification);
+    // Notification preference check.
+    //In sleep or awake check. If in sleep, set next notification to wakeup hour + 15minute.
+    if (sleepTime.hour >= 0 && sleepTime.hour < 12) {
+      //if sleep after midnight.
+      if (now.isAfter(sleepTime) && now.isBefore(wakeUpTime)) {
+        //SLEEPING
+        if (DateTime.now().hour >= 0 && DateTime.now().hour < wakeUpTime.hour) {
+          AndroidAlarmManager.oneShotAt(
+              wakeUpTime.add(const Duration(minutes: 15)), 0, showNotification);
+        } else {
+          AndroidAlarmManager.oneShotAt(
+              wakeUpTime.add(const Duration(minutes: 15, days: 1)),
+              0,
+              showNotification);
+        }
+      } else {
+        //AWAKE
+        AndroidAlarmManager.oneShot(
+            Duration(minutes: (intervalMinute + (intervalHour * 60))),
+            0,
+            showNotification);
+      }
     } else {
-      AndroidAlarmManager.oneShot(
-          Duration(
-              minutes: ((settingsModel.wakeUpHour - dateTime.hour) * 60) + 60),
-          alarmId,
-          showNotification);
+      // if sleep before midnight.
+      if (now.isBefore(sleepTime) && now.isAfter(wakeUpTime)) {
+        //AWAKE
+        AndroidAlarmManager.oneShot(
+            Duration(minutes: (intervalMinute + (intervalHour * 60))),
+            0,
+            showNotification);
+      } else {
+        //SLEEPING
+        if (DateTime.now().hour >= 0 && DateTime.now().hour < wakeUpTime.hour) {
+          AndroidAlarmManager.oneShotAt(
+              wakeUpTime.add(const Duration(minutes: 15)), 0, showNotification);
+        } else {
+          AndroidAlarmManager.oneShotAt(
+              wakeUpTime.add(const Duration(minutes: 15, days: 1)),
+              0,
+              showNotification);
+        }
+      }
     }
   }
 }
@@ -83,23 +132,24 @@ Future<void> main() async {
 
   SharedPref sharedPref = SharedPref();
   SettingsModel settingsModel = sharedPref.getSavedSettingsModel();
-  
+
   //If device android initialize alarm
   if (Platform.isAndroid) {
     AndroidAlarmManager.initialize();
   }
 
-  runApp(Provider(
-    create: (context) => ThemeStore(), 
-    child: EasyLocalization(
-      supportedLocales: const [Locale('en', 'US'), Locale('tr', 'TR')],
-      path: 'assets/translations', 
-      fallbackLocale:  
-        settingsModel.language == LanguageKeys.english.name ? const Locale('en', 'US'):
-        settingsModel.language == LanguageKeys.turkish.name ? const Locale('tr', 'TR') : const Locale('en', 'US'),
-      child: const MyApp()
-      )
-    ),
+  runApp(
+    Provider(
+        create: (context) => ThemeStore(),
+        child: EasyLocalization(
+            supportedLocales: const [Locale('en', 'US'), Locale('tr', 'TR')],
+            path: 'assets/translations',
+            fallbackLocale: settingsModel.language == LanguageKeys.english.name
+                ? const Locale('en', 'US')
+                : settingsModel.language == LanguageKeys.turkish.name
+                    ? const Locale('tr', 'TR')
+                    : const Locale('en', 'US'),
+            child: const MyApp())),
   );
 
   //If device android initialize alarm
@@ -108,20 +158,19 @@ Future<void> main() async {
   }
 }
 
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-  ThemeStore themeStore = Provider.of<ThemeStore>(context, listen: true);
-
-    return Observer(
-      builder: (context) {
+    ThemeStore themeStore = Provider.of<ThemeStore>(context, listen: true);
+    return Observer(builder: (context) {
       return MaterialApp(
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
+        debugShowCheckedModeBanner: false,
         locale: context.locale,
         title: 'Flutter Demo',
         theme: themeStore.themeData,
