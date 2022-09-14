@@ -231,5 +231,6 @@ enum SharedPrefKeys {
   activity_list,
   people_list,
   recorded_list,
-  settings_model
+  settings_model,
+  is_first_time
 }

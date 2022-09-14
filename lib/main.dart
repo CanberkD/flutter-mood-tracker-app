@@ -132,11 +132,13 @@ Future<void> main() async {
 
   SharedPref sharedPref = SharedPref();
   SettingsModel settingsModel = sharedPref.getSavedSettingsModel();
-
+  
   //If device android initialize alarm
   if (Platform.isAndroid) {
     AndroidAlarmManager.initialize();
   }
+
+  bool isFirstTime = sharedPref.getString(SharedPrefKeys.is_first_time) != null ? false : true;
 
   runApp(
     Provider(
@@ -149,7 +151,7 @@ Future<void> main() async {
                 : settingsModel.language == LanguageKeys.turkish.name
                     ? const Locale('tr', 'TR')
                     : const Locale('en', 'US'),
-            child: const MyApp())),
+            child: MyApp(isFirst: isFirstTime,))),
   );
 
   //If device android initialize alarm
@@ -160,9 +162,10 @@ Future<void> main() async {
 
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key, required this.isFirst}) : super(key: key);
 
-  // This widget is the root of your application.
+  final bool isFirst;
+
   @override
   Widget build(BuildContext context) {
     ThemeStore themeStore = Provider.of<ThemeStore>(context, listen: true);
@@ -172,11 +175,13 @@ class MyApp extends StatelessWidget {
         supportedLocales: context.supportedLocales,
         debugShowCheckedModeBanner: false,
         locale: context.locale,
-        title: 'Flutter Demo',
+        title: 'Mood Tracker',
         theme: themeStore.themeData,
-        initialRoute: Routes.home.name,
+        initialRoute: isFirst ? Routes.introduction.name : Routes.home.name,
         routes: NavigationRoutes().routes,
       );
     });
   }
 }
+
+
