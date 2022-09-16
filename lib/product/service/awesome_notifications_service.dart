@@ -83,27 +83,6 @@ void showNotification(){
     }
   }
 
-  ////Scheduled notification creator.
-  //Future<void> scheduledNotification(ChannelIds id, ChannelKeys key, int hour, int minute) async { 
-//
-  //  await AwesomeNotifications().createNotification(
-  //    content: NotificationContent(
-  //      id: id.index,
-  //      wakeUpScreen: true,
-  //      channelKey: key.name,
-  //      title: 'How do you feel?',
-  //      body: 'Save your feels for track mood changes in your day.',  
-  //      notificationLayout: NotificationLayout.Default,
-  //    ),
-  //    schedule: NotificationCalendar(
-  //      hour: hour,
-  //      minute: minute,
-  //      timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
-  //    )
-  //  );
-  //}
-//
-
   //Listeners.  
   void awesomeNotificationAddMoodListener(BuildContext context, ChannelIds id){
 
@@ -119,50 +98,7 @@ void showNotification(){
       }
     });
 
-    //TODO: Check it later for notifications.
-    //When notification display, next one schedule now.
-    //AwesomeNotifications().displayedStream.listen((event) { 
-    //  if(event.id == id.index){
-    //    setNextNotification();
-    //  }
-    //});
-
 }
-
-  //void setNextNotification(){
-  //  SharedPref sharedPref = SharedPref();
-  //  SettingsModel settingsModel = sharedPref.getSavedSettingsModel();
-  //  DateTime dateTime = DateTime.now();
-//
-  //  int countOfNotif = settingsModel.notificationCountInADay;
-  //  int wakeUpHours = settingsModel.sleepHour - settingsModel.wakeUpHour;
-  //  int intervalHour = 0;
-  //  int intervalMinute = ((wakeUpHours*60)~/countOfNotif);
-  //  if(intervalMinute >= 60){
-  //    intervalHour = intervalMinute~/60;
-  //    intervalMinute = intervalMinute%60;
-  //  }
-//
-  //  if(settingsModel.isNotificationOn){ //Notification settings check
-  //    if (dateTime.hour + intervalHour>= settingsModel.wakeUpHour && dateTime.hour + intervalHour < settingsModel.sleepHour) { //is wake hour
-  //      if (dateTime.minute + intervalMinute > settingsModel.wakeUpMinute) { // is wake minutes of hour.
-  //        if((dateTime.minute + intervalMinute)> 60){  //is next minute > 60
-  //          intervalHour = (dateTime.minute + intervalMinute)~/60; //add 60+ to intervalHour + 1;
-  //          intervalMinute = 60-intervalMinute; // left goes to minutes.
-  //        }
-  //        scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, dateTime.hour + intervalHour, dateTime.minute + intervalMinute);
-  //      }
-  //      else {
-  //        scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, settingsModel.wakeUpHour , settingsModel.wakeUpMinute + 15);
-  //      }
-  //    }
-  //    else {
-  //        scheduledNotification(ChannelIds.moodReminder, ChannelKeys.moodReminder, settingsModel.wakeUpHour , settingsModel.wakeUpMinute + 15);
-  //    }
-  //  }
-//
-  //}
-
   //Permission control method.
   void awesomeNotificationsPermissionCheck(BuildContext context){
     //

@@ -55,7 +55,6 @@ void nextAlarmSetup() async {
   //Next notification appear interval time later. So we calculating exectly appear time.
   now = now.add(Duration(minutes: intervalMinute, hours: intervalHour));
 
-  intervalMinute = 1;
   //And now, checking is user awake or sleeping.
   if (settingsModel.isNotificationOn) {
     // Notification preference check.
@@ -137,11 +136,6 @@ Future<void> main() async {
   SharedPref sharedPref = SharedPref();
   SettingsModel settingsModel = sharedPref.getSavedSettingsModel();
   
-  //If device android initialize alarm
- // if (Platform.isAndroid) {
- //   AndroidAlarmManager.initialize();
- // }
-
   bool isFirstTime = sharedPref.getString(SharedPrefKeys.is_first_time) != null ? false : true;
 
   if (Platform.isAndroid) {
@@ -162,11 +156,6 @@ Future<void> main() async {
                     : const Locale('en', 'US'),
             child: MyApp(isFirst: isFirstTime,))),
   );
-
-  ////If device android initialize alarm
-  //if (Platform.isAndroid) {
-  //  nextAlarmSetup();
-  //}
 }
 
 
