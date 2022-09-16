@@ -4,7 +4,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
+import 'package:flutter_mood_tracker/product/pages/input/view/input_view.dart';
 import 'package:flutter_mood_tracker/product/pages/settings/model/settings_model.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 
@@ -38,13 +38,14 @@ class AwesomeNotificationService {
           wakeUpScreen: true,
           id: ChannelIds.moodReminder.index,
           channelKey: ChannelKeys.moodReminder.name,
-          title: 'howdoyoufeelnotification'.tr(),
-          body: 'saveyourfeelsnotification'.tr(),
+          title: 'How do you feel?',
+          body: 'Save your feels for track mood changes in your day.',
           notificationLayout: NotificationLayout.Default),
     );
   }
 
 void showNotification(){
+    AwesomeNotifications().cancelAll;
     AwesomeNotificationService().simpleNotificationForReminder();
     nextAlarmSetup();
 }
@@ -105,7 +106,7 @@ void showNotification(){
 
   //Listeners.  
   void awesomeNotificationAddMoodListener(BuildContext context, ChannelIds id){
-    
+
     AwesomeNotifications().actionStream.listen((event) {
       if(Platform.isIOS){
         AwesomeNotifications().getGlobalBadgeCounter().then((value) => {
@@ -114,7 +115,7 @@ void showNotification(){
       }
       if(event.id == id.index){
         //When notification click, first page gonna be mood input page. 
-        Navigator.pushNamed(context, Routes.addMood.name);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const InputView(),), (route) => false);
       }
     });
 
@@ -186,9 +187,6 @@ void showNotification(){
     );
   }
 
-  void cancelAllScheduledNotifications(){
-    AwesomeNotifications().cancelAll();
-  }
 }
 
 enum ChannelIds {moodReminder, notificationOn}

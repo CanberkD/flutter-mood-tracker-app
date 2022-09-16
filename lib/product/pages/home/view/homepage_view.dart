@@ -16,17 +16,13 @@ class HomePageView extends StatefulWidget {
 
 class _HomePageViewState extends State<HomePageView> {
 
-  late final HomePageViewModel _model = HomePageViewModel();  
-           
+  late final HomePageViewModel _model; 
+
   @override
   void initState() {
     super.initState();
-    //_model.notificationSetup(context);
-    Future.delayed(Duration.zero, () {
-      _model.setPngPaths(context);
-    },);
+    _model = HomePageViewModel(context); 
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

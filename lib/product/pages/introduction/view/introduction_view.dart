@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/core/components/modified_packages/introduction/src/introduction_slider.dart';
 import 'package:flutter_mood_tracker/core/components/modified_packages/introduction/utils/buttons.dart';
@@ -18,9 +19,9 @@ class IntroductionView extends StatelessWidget {
       body: IntroductionSlider(
         dotIndicator: DotIndicator(selectedColor: ProjectColors.primaryBlue.value()),
         items: [
-          IntroductionItem(context, IntroductionImgPath.notification.getPath(), 'REMINDER NOTIFICATIONS', 'Input your sleep and wake up time. According to these hours, we will send you notifications in your prefer times.'),
-          IntroductionItem(context, IntroductionImgPath.input.getPath(), 'INPUT YOUR MOOD', 'Input your mood with information like what you doing and with whom.'),
-          IntroductionItem(context, IntroductionImgPath.saved.getPath(), 'SAVE YOUR MOODS', 'Save  this moods with all their information for later viewing.'),
+          IntroductionItem(context, IntroductionImgPath.notification.getPath(), 'remindernotificationintroduction'.tr(), 'remindernotificationsubtitle'.tr()),
+          IntroductionItem(context, IntroductionImgPath.input.getPath(), 'inputmoodintroduction'.tr(), 'inputmoodsubtitle'.tr()),
+          IntroductionItem(context, IntroductionImgPath.saved.getPath(), 'savemoodintroduction'.tr(), 'savemoodsubtitte'.tr()),
         ],
         doneClicked: () {
           SharedPref sharedPref = SharedPref();

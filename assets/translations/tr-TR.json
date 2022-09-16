@@ -73,5 +73,11 @@
     "dontallow" : "İzin Verme",
     "allow" : "Tamam",
     "alone" : "Yalnız",
-    "nothing" : "Hiçbir şey"
+    "nothing" : "Hiçbir şey",
+    "remindernotificationintroduction": "HATIRLATMA BİLDİRİMLERİ",
+    "remindernotificationsubtitle": "Uyuduğun ve uyandığın saatleri gir. Bu saatlere bağlı olarak uyanık olduğun saatlerde, tercih ettiğin sayıda hatırlatma bildirimleri gönderelim.",
+    "inputmoodintroduction" : "MOOD'UNU GİR",
+    "inputmoodsubtitle" : "O an ne yaptığını ve kiminle oludğunun bilgisiyle beraber nasıl hissetiğini gir.",
+    "savemoodintroduction" : "MOOD'LARINI TAKİP",
+    "savemoodsubtitte" : "Girdiğin moodları ve gün içindeki değişimini takip et."
 }

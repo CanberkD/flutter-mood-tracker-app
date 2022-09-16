@@ -115,6 +115,7 @@ class TodayMoodsListCard extends StatelessWidget {
   final String _moodImgPath;
   final String _hour;
   final HomePageViewModel _model;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(

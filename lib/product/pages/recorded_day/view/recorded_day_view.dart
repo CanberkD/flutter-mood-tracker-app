@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/components/button/go_back_button.dart';
 import 'package:flutter_mood_tracker/product/components/text/subtitle_text.dart';
 import 'package:flutter_mood_tracker/product/consts/color.dart';
+import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/consts/size.dart';
 import 'package:flutter_mood_tracker/product/model/date_time.dart';
 import 'package:flutter_mood_tracker/product/model/recorded_mood_model.dart';
@@ -17,10 +18,11 @@ class RecordedDayView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final recordedMoodModel = ModalRoute.of(context)!.settings.arguments as RecordedMoodModel;
-
+    PngPaths pngPathsDark = PngPaths(themeInfo: ThemeInfo.dark);
+    PngPaths pngPaths = PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ? ThemeInfo.dark: ThemeInfo.light);
     return Scaffold(
       appBar: AppBar(
-        leading: const GoBackIconButton(),
+        leading: const GoBackIconButton(isThemeChange: false,),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -53,7 +55,12 @@ class RecordedDayView extends StatelessWidget {
                                       child: SizedBox(
                                         height: ImageSizes.recordedDayListTileMoodImageSize.value(),
                                         width: ImageSizes.recordedDayListTileMoodImageSize.value(),
-                                        child: Image.asset(recordedMoodModel.moodList[index].moodImgPath)
+                                        child: Image.asset(
+                                          recordedMoodModel.moodList[index].moodImgPath == pngPathsDark.happy ? 
+                                            pngPaths.happy :
+                                          recordedMoodModel.moodList[index].moodImgPath == pngPathsDark.notr ? 
+                                            pngPaths.notr : pngPaths.sad
+                                          )
                                       ),
                                     ),
                                   ]

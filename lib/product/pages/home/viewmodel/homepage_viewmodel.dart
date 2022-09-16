@@ -1,5 +1,6 @@
 
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mood_tracker/product/consts/image_paths.dart';
 import 'package:flutter_mood_tracker/product/pages/home/model/infogram_model.dart';
@@ -11,27 +12,11 @@ import 'package:mobx/mobx.dart';
 
 part 'homepage_viewmodel.g.dart';
 
-class HomePageViewModel = _HomePageViewModelBase with _$HomePageViewModel;
+class HomePageViewModel extends _HomePageViewModelBase with _$HomePageViewModel {
+  HomePageViewModel(BuildContext context) {
+        
 
-abstract class _HomePageViewModelBase with Store {
-  late final SharedPref sharedPref;
-  late final ProjectDateTime _dateTime;
-
-  late PngPaths pngPaths = PngPaths(themeInfo: ThemeInfo.dark);
-  
-  @observable
-  int dayIndex = ProjectDateTime().day;
-  @observable
-  int monthIndex = ProjectDateTime().month;
-  @observable
-  int yearIndex = ProjectDateTime().year;
- 
-  late List<DropdownMenuItem<int>> dropdownDayList = List.empty(growable: true);
-  late List<DropdownMenuItem<int>> dropdownMonthList = List.empty(growable: true);
-  late List<DropdownMenuItem<int>> dropdownYearList = List.empty(growable: true);
-  
-  _HomePageViewModelBase(){
-  
+    buildContext = context;
     sharedPref = SharedPref();
 
     _dateTime = ProjectDateTime(dateTime: DateTime.now());
@@ -46,7 +31,27 @@ abstract class _HomePageViewModelBase with Store {
       dropdownYearList.add(DropdownMenuItem(value: i+1,child: Text((i+1).toString()),));
     }
   }
+}
 
+abstract class _HomePageViewModelBase with Store {
+  late final SharedPref sharedPref;
+  late final ProjectDateTime _dateTime;
+  late final BuildContext buildContext;
+
+  late PngPaths pngPaths = PngPaths(themeInfo: Theme.of(buildContext).brightness == Brightness.light ? ThemeInfo.dark: ThemeInfo.light);
+  
+  @observable
+  int dayIndex = ProjectDateTime().day;
+  @observable
+  int monthIndex = ProjectDateTime().month;
+  @observable
+  int yearIndex = ProjectDateTime().year;
+ 
+  late List<DropdownMenuItem<int>> dropdownDayList = List.empty(growable: true);
+  late List<DropdownMenuItem<int>> dropdownMonthList = List.empty(growable: true);
+  late List<DropdownMenuItem<int>> dropdownYearList = List.empty(growable: true);
+  
+  _HomePageViewModelBase();
 
   //Getting saved mood of today. 
   late List<MoodModel> todayList = sharedPref.makeToDayList();  
@@ -85,7 +90,8 @@ abstract class _HomePageViewModelBase with Store {
   }
 
   void setPngPaths(BuildContext context){
-    pngPaths = PngPaths(themeInfo: Theme.of(context).brightness == Brightness.light ? ThemeInfo.dark: ThemeInfo.light);
+    print(Theme.of(context).brightness);
+    pngPaths.setThemeInfo = Theme.of(context).brightness == Brightness.light ? ThemeInfo.dark: ThemeInfo.light;
   }
 
   //Future<void> notificationSetup(BuildContext context) async {

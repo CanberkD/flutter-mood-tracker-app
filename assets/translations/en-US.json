@@ -73,5 +73,11 @@
     "dontallow" : "Don't Allow",
     "allow" : "Allow",
     "alone" : "Alone",
-    "nothing" : "Nothing"
+    "nothing" : "Nothing",
+    "remindernotificationintroduction": "REMINDER NOTIFICATION",
+    "remindernotificationsubtitle": "Input your sleep and wake up time. According to these hours, we will send you notifications in your prefer times.",
+    "inputmoodintroduction" : "INPUT YOUR MOOD",
+    "inputmoodsubtitle" : "Input your mood with information like what you doing and with whom.",
+    "savemoodintroduction" : "TRACK YOUR MOODS",
+    "savemoodsubtitte" : "Track your saved moods and mood changes with all their information."
 }

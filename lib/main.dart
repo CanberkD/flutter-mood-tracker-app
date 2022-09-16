@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_mood_tracker/product/navigation/navigation_routres.dart';
 import 'package:flutter_mood_tracker/product/pages/settings/model/settings_model.dart';
-import 'package:flutter_mood_tracker/product/pages/settings/view/settings_view.dart';
+import 'package:flutter_mood_tracker/product/pages/settings/view/widgets.dart';
 import 'package:flutter_mood_tracker/product/service/awesome_notifications_service.dart';
 import 'package:flutter_mood_tracker/product/storage/shared_pref.dart';
 import 'package:flutter_mood_tracker/product/theme/theme_store.dart';
@@ -54,6 +55,7 @@ void nextAlarmSetup() async {
   //Next notification appear interval time later. So we calculating exectly appear time.
   now = now.add(Duration(minutes: intervalMinute, hours: intervalHour));
 
+  intervalMinute = 1;
   //And now, checking is user awake or sleeping.
   if (settingsModel.isNotificationOn) {
     // Notification preference check.
@@ -104,6 +106,8 @@ void nextAlarmSetup() async {
 //For reminder notification -------------------------------
 
 Future<void> main() async {
+
+
   //For sharedPrefInstance.
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefInstance.init();
@@ -134,11 +138,16 @@ Future<void> main() async {
   SettingsModel settingsModel = sharedPref.getSavedSettingsModel();
   
   //If device android initialize alarm
-  if (Platform.isAndroid) {
-    AndroidAlarmManager.initialize();
-  }
+ // if (Platform.isAndroid) {
+ //   AndroidAlarmManager.initialize();
+ // }
 
   bool isFirstTime = sharedPref.getString(SharedPrefKeys.is_first_time) != null ? false : true;
+
+  if (Platform.isAndroid) {
+    AndroidAlarmManager.initialize();
+    nextAlarmSetup();
+  }
 
   runApp(
     Provider(
@@ -154,10 +163,10 @@ Future<void> main() async {
             child: MyApp(isFirst: isFirstTime,))),
   );
 
-  //If device android initialize alarm
-  if (Platform.isAndroid) {
-    nextAlarmSetup();
-  }
+  ////If device android initialize alarm
+  //if (Platform.isAndroid) {
+  //  nextAlarmSetup();
+  //}
 }
 
 

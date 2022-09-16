@@ -2,7 +2,7 @@ class PngPaths{
   late String _basePngPath = "assets/png";
   final String _darkPath = "/dark";
   final String _lightPath = "/light";
-  final ThemeInfo themeInfo;
+  ThemeInfo themeInfo;
   PngPaths({required this.themeInfo}){
     (themeInfo == ThemeInfo.light) ?  _basePngPath += _lightPath : _basePngPath += _darkPath;
   }
@@ -23,6 +23,7 @@ class PngPaths{
   String get world => "$_basePngPath/world.png";
   String get close => "$_basePngPath/close.png";
   String get filterClear => "$_basePngPath/filter_clear.png";
+  set setThemeInfo(ThemeInfo info) => themeInfo = info;
 }
 
 enum ThemeInfo {light, dark}
