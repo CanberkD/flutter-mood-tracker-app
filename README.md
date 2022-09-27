@@ -34,7 +34,7 @@ PS: Reminder notifications work properly only on android.
 
 <table>
   <tr>
-    <td>Recoded Page</td>
+    <td>Recorded Page</td>
     <td>Settings Page</td>
   </tr>
   <tr>
@@ -57,7 +57,7 @@ PS: Reminder notifications work properly only on android.
 
 <table>
   <tr>
-    <td>Recoded Page</td>
+    <td>Recorded Page</td>
     <td>Settings Page</td>
   </tr>
   <tr>
